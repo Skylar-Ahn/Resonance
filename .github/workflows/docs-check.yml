@@ -13,12 +13,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13'
       - name: Install documentation tooling
         run: python -m pip install -r scripts/requirements-docs.txt
+      - name: Install pinned secret scanner
+        run: python scripts/install_gitleaks.py
       - name: Check local documentation and asset links
         run: python scripts/check_docs.py
       - name: Test checker regressions
         run: python -m unittest discover -s scripts/tests -v
+      - name: Check pushed files, secrets, and commit messages
+        run: python scripts/run_git_checks.py ci

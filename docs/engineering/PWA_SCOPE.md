@@ -8,6 +8,8 @@
 
 Resonance는 모바일·태블릿·데스크톱에서 같은 정보 구조와 데이터를 사용하는 반응형 PWA로 개발한다. 화면·흐름은 [IA](../product/IA.md)와 [User Flow](../product/USER_FLOW.md)를 따른다. PWA라는 제품 형태의 확정은 아래 모든 기능을 MVP 필수로 정한다는 뜻이 아니다.
 
+명시적 로그인 성공 직후에는 App Home으로 이동한다. 이미 로그인된 세션으로 PWA를 재실행하면 마지막 화면과 복원 가능한 상태를 되살리고, 불가능하면 안전한 상위 화면으로 fallback한다. 이 제품 규칙은 manifest start URL과 상태 저장 구현을 자동 확정하지 않는다.
+
 [기존 기술 후보](../data/DATA_AND_ARCHITECTURE.md) 9~10절은 보존한다. 프레임워크·언어·서비스 워커 도구·API·DB·배포 플랫폼을 이 문서에서 채택하지 않는다.
 
 ## 2. 범위와 미결 사항
@@ -19,8 +21,9 @@ Resonance는 모바일·태블릿·데스크톱에서 같은 정보 구조와 �
 | 업데이트 | 사용자 맥락 보존 목표는 기존 반응형·입력 상태 문서 참조 | 새 버전 알림·즉시 교체/재시작, 열린 탭·작성 중 데이터, 캐시 정리·롤백 | 구버전 탭에서 배포 후 전환, 입력 손실 여부 | 서비스 워커 구현 제외 |
 | 딥링크 | D-009: 공연 알림의 도착점은 해당 Concert Detail | URL 계약, 보호된 링크 인증 후 복귀, 설치/브라우저 진입 차이, 없는·취소된 공연, 호스팅 fallback | 주소 직접 진입·새로고침·back·인증 후 복귀 | `/demo` 하위 경로만 모의 검증; 최종 URL 계약 아님 |
 | 알림 | D-010: 공연 알림에 좌석 추천을 포함하는 방향, 잔여석 보장 없음 | Web Push/Telegram 등 채널, 권한 요청·거절, 구독 관리, 읽음·중복·취소/변경 알림 | 채널 확정 후 권한·전달·대상 상세 도착 | 실제 알림·권한 요청 제외 |
+| 음악 | App Home LP는 실제 playback UI, source는 Apple Music / Apple Music Classical 계열 | MusicKit PWA 지원, 별도 사용자 권한, catalog mapping, background·오류 처리 | 지원 브라우저 권한·재생·Pause/Resume/Stop·track-ended·복원 | P-001은 idle 시각만 구현; 실제 playback 미구현 |
 
-설치·서비스 워커·Push를 묶어 한꺼번에 구현하지 않는다. 각 질문이 결정되면 기존 로그의 번호를 연결하고 이 표와 영향받는 IA/Flow를 갱신한다. 일반 로그인 도착점과 복원 충돌은 DR-002, 알림 채널은 기존 Q12, 아키텍처는 Q35~36과 연결된다.
+설치·서비스 워커·Push·MusicKit을 묶어 한꺼번에 구현하지 않는다. 각 질문이 결정되면 [결정 로그](../decisions/DECISION_LOG_AND_OPEN_QUESTIONS.md)의 OQ ID를 연결하고 이 표와 영향받는 IA/Flow를 갱신한다. 보호된 deep link는 OQ-002, MusicKit은 OQ-006, 알림 채널은 OQ-011, 아키텍처는 OQ-034~035와 연결된다.
 
 ## 3. 기술 결정 시점
 
@@ -30,9 +33,10 @@ Resonance는 모바일·태블릿·데스크톱에서 같은 정보 구조와 �
 | 설치 가능한 PWA 작업 전 | 대상 플랫폼과 수용 기준, manifest/아이콘/시작 URL, 배포 방식 | 오프라인 쓰기·Push가 선택되지 않았다면 해당 구현 |
 | 오프라인·업데이트 작업 전 | 캐시 대상·개인정보 경계·만료·교체 UX를 먼저 결정하고 서비스 워커 도구 선택 | 미채택 오프라인 기능 |
 | 알림 작업 전 | 전달 채널·권한·구독·인증 후 딥링크 정책, 전송 인프라 | 다른 채널과 확장 알림 |
+| 실제 음악 작업 전 | MusicKit PWA 지원 환경, Apple Music 사용자 authorization, catalog mapping, 오류·background 정책 | imported taste seed와 onboarding confirmation이 별도 작업이면 분리 가능 |
 
 ## 4. 완료 주장과 인계
 
 P-001의 T-01은 D-031에 따라 프로토타입에 한해 해제했다. Next.js·React·TypeScript 구성은 [P-001 실행 기록](../tasks/P-001.md)에 명시하며 최종 제품 스택과 구분한다. manifest·서비스 워커·설치·캐시를 구현한 것은 아니다.
 
-[P-001](../tasks/P-001.md)은 모의 UI 흐름 검증만 완료할 수 있다. PWA 설치·오프라인·업데이트·알림 완료 증거로 사용하지 않는다. 실제 PWA 구현 작업에서는 선택된 범위, 지원 환경, 테스트 절차·결과와 미지원 상태를 해당 작업 문서에 기록한다. 미정 항목은 Open Question으로 유지한다.
+[P-001](../tasks/P-001.md)은 모의 UI 흐름 검증만 완료했다. PWA 설치·오프라인·업데이트·알림 또는 실제 Apple Music playback 완료 증거로 사용하지 않는다. 실제 PWA 구현 작업에서는 선택된 범위, 지원 환경, 테스트 절차·결과와 미지원 상태를 해당 작업 문서에 기록한다. 미정 항목은 Open Question으로 유지한다.

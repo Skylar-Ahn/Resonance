@@ -80,7 +80,10 @@ class LinkChecks(unittest.TestCase):
 
     def test_dependencies_and_generated_directories_are_excluded(self):
         self.write("README.md")
-        for folder in ["node_modules", ".git", ".venv", "build", ".next"]:
+        for folder in [
+            "node_modules", ".git", ".venv", "build", ".next",
+            "test-results", "playwright-report", ".local-data", ".local-assets",
+        ]:
             self.write(f"{folder}/README.md", "[x](missing.md)")
         result = check_tree(self.root)
         self.assertEqual((result.documents, result.errors), (1, []))

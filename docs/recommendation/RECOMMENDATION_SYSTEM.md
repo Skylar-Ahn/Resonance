@@ -1,7 +1,7 @@
 # Resonance — Recommendation System Specification
 
-> 상태: Working baseline v1.0  
-> 기준일: 2026-09-14
+> 상태: Working baseline v1.1
+> 기준일: 2026-09-15
 
 ## 1. 추천 시스템의 역할
 
@@ -42,6 +42,16 @@ YouTube 및 YouTube Music 데이터는 사용하지 않는다.
 같은 곡이라도 연주자와 해석에 따라 선호가 달라질 수 있다는 문제를 보존한다. 이를 위해 작품 선호와 연주자 선호를 분리하고, 사용자가 해석 스타일을 자연어로 표현할 수 있게 한다.
 
 외부 영상 재생·시청 데이터를 우회 수집하지 않는다. 북마크, 공연 상세 탐색, 직접 선택, 후기와 같은 first-party 신호를 이용한다.
+
+### 3.3 For You 기본 ranking — 확정 경계
+
+- Concert Taste 적합도를 ranking의 주축으로 사용한다.
+- 공연일 임박도와 공연 최초 수집 이후의 신규성을 보조 신호로 사용한다.
+- 사용자별 seen/unseen 상태 자체는 ranking 신호로 사용하지 않는다.
+- 공연을 seen으로 전환해도 숨기거나 강등하지 않고 같은 feed position을 유지한다.
+- 상세 열기·좌석 추천 확인 같은 의도적 행동은 별도의 first-party 신호로 장기 학습에 쓰일 수 있지만 단순 viewport 노출은 행동 신호로 기록하지 않는다.
+
+정확한 feature weight와 score formula는 [결정 로그](../decisions/DECISION_LOG_AND_OPEN_QUESTIONS.md)의 OQ-010이며 임의로 고정하지 않는다.
 
 ## 4. 좌석 추천 입력
 
@@ -203,4 +213,3 @@ AI Champion 제출과 실제 제품 검증을 위해 다음을 측정할 수 있
 - 신규 사용자와 반복 사용자의 성능 차이
 
 정확한 지표·테스트셋·통과 기준은 아직 확정하지 않는다.
-

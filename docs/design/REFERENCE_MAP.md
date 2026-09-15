@@ -3,7 +3,7 @@
 > 점검일: 2026-09-15
 > 기준: 저장소 실제 파일과 Git 추적 목록, 로컬 이미지의 육안 확인
 
-[기존 디자인 명세](DESIGN_AND_INTERACTION.md)와 [IA](../product/IA.md)를 화면 구조·시각 방향의 기준으로 사용한다. 아래 자산은 시각 참고이며 제품 정책을 확정하지 않는다. 관련 결정은 [기존 로그](../decisions/DECISION_LOG_AND_OPEN_QUESTIONS.md)의 D-026~027, 작업 범위는 [P-001](../tasks/P-001.md)을 따른다.
+[Design System](DESIGN_SYSTEM.md), [Responsive](RESPONSIVE.md), [Interaction](INTERACTION.md)과 [IA](../product/IA.md)를 화면 구조·시각·상호작용의 기준으로 사용한다. 아래 자산은 시각 참고이며 제품 정책을 확정하지 않는다. 관련 결정은 [기존 로그](../decisions/DECISION_LOG_AND_OPEN_QUESTIONS.md)의 D-026~027과 D-032~039, 작업 범위는 [P-001](../tasks/P-001.md)을 따른다.
 
 ## 1. 자산 가용성
 
@@ -23,17 +23,17 @@
 
 | 화면 | 현재 재현 가능한 기준 | 참고 자산 ID | 누락·불일치와 P-001 처리 |
 | --- | --- | --- | --- |
-| Splash | [디자인](DESIGN_AND_INTERACTION.md) 3.1절 | L-01, L-03 첫 화면 | 시각 예시 확보; P-001 범위 밖 |
-| App Home | [디자인](DESIGN_AND_INTERACTION.md) 3~5절, [Flow](../product/USER_FLOW.md) UF-03 | L-03 마지막, L-05 오른쪽 위 | 목업은 For You 활성·playing 이미지이나 기본 홈은 메뉴 비선택·idle 노란 LP; 단독 검색·아바타는 햄버거 유틸리티 구조를 대체하지 않음 |
-| For You | [IA](../product/IA.md) 8.1절, 디자인 5.2절 | L-03 두 번째, L-05 왼쪽 아래 | 데스크톱의 중복 큰 제목·All Events는 최신 명세에 따라 제외; 태블릿·빈/오류 상태는 추가 설계 |
+| Splash | [Design System](DESIGN_SYSTEM.md) 7절 | L-01, L-03 첫 화면 | 시각 예시 확보; P-001 범위 밖 |
+| App Home | [Design System](DESIGN_SYSTEM.md) 7~8절, [Responsive](RESPONSIVE.md) 3~4절, [Interaction](INTERACTION.md) 2·5절 | L-03 마지막, L-05 오른쪽 위 | 목업은 For You 활성·playing 이미지이나 기본 홈은 메뉴 비선택·idle 노란 LP; 단독 검색·아바타는 햄버거 유틸리티 구조를 대체하지 않음 |
+| For You | [IA](../product/IA.md) 8.1절, [Design System](DESIGN_SYSTEM.md) 3·6·8절 | L-03 두 번째, L-05 왼쪽 아래 | 데스크톱의 중복 큰 제목·All Events는 제외; NEW/unseen/seen 표현과 빈·오류 상태의 기준 화면은 추가 설계 |
 | Concert Detail / Overview | [IA](../product/IA.md) 8.2절, [Flow](../product/USER_FLOW.md) UF-07 | L-02, L-03 세 번째, L-05 오른쪽 아래 | 배포용 공연 이미지 원본·출처 미확보; 단일 추천 강조는 복수안 제품 규칙을 대체하지 않음; All Events 복귀 문구 제외 |
 | Seat | [추천 명세](../recommendation/RECOMMENDATION_SYSTEM.md) 6~11절, [Flow](../product/USER_FLOW.md) UF-08 | L-02 축약 좌석도만 참고 | 완성된 Seat 화면, Current Need 조정, 좌석 번호별 좌표·실제 홀 도면 없음; P-001은 가상 좌표 fixture와 자체 도면 필요 |
 | Program | [IA](../product/IA.md) 8.2절 | 없음 | 화면·데이터 샘플 누락; P-001 범위 밖 |
-| Articles / Article Detail | [디자인](DESIGN_AND_INTERACTION.md) 5.4절 | L-04 | 목록·태블릿·데스크톱·출처 자산 누락; P-001 범위 밖 |
+| Articles / Article Detail | [Design System](DESIGN_SYSTEM.md) 8절, [Responsive](RESPONSIVE.md) 5~6절 | L-04 | 목록·태블릿·데스크톱·출처 자산 누락; P-001 범위 밖 |
 | Reviews / 작성·수정·상세 | [IA](../product/IA.md) 8.4절 | 없음 | 현행 개인 후기 화면 누락; 과거 타인 후기 표현을 되살리지 않음 |
 | 온보딩 / My Concert Taste | [Flow](../product/USER_FLOW.md) UF-02·04 | 없음 | 화면·입력 상태 누락; P-001은 온보딩 완료 fixture만 사용 |
 | Bookmarks / Account / Settings | [IA](../product/IA.md) 8.5~8.8절 | 없음 | 화면·상태 자산 누락; 별도 작업 |
-| 공통 내비게이션·상태 | [디자인](DESIGN_AND_INTERACTION.md) 6~7절, [Flow](../product/USER_FLOW.md) 23~24절 | L-03 모바일, L-05 데스크톱 | 태블릿·키보드·오류·미지원 기준 화면 누락; P-001 PT-05~09와 AC-07~08로 검증 |
+| 공통 내비게이션·상태 | [Responsive](RESPONSIVE.md) 2~7절, [Interaction](INTERACTION.md) 2~7절, [Flow](../product/USER_FLOW.md) 23~24절 | L-03 모바일, L-05 데스크톱 | 확정 breakpoint와 Mobile/Tablet bottom→top 전환을 반영한 기준 화면, 키보드·오류·미지원 화면은 누락; P-001 캡처는 이전 프로토타입 증거 |
 
 L-02의 `Best value / Center view / Immersive`는 고정 추천 유형이 아니다. 문서의 확정 구조를 우선하고 모의 좌석을 실제 공연장의 판매 좌석처럼 표시하지 않는다.
 

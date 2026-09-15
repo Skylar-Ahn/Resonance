@@ -1,8 +1,8 @@
 # Resonance — User Flow
 
-> 문서 상태: Working Baseline v0.2  
+> 문서 상태: Working Baseline v0.3
 > 기준일: 2026-09-15  
-> 기준 문서: [IA.md](IA.md) v0.3\
+> 기준 문서: [IA.md](IA.md) v0.4\
 > 대체 문서: `user-flow.md` Draft v0.1, `05_USER_FLOW_ADDENDUM.md` v1.0 (저장소에 없는 역사적 원본명)\
 > 제품: 클래식 공연 추천·좌석 추천·아티클·개인 후기 아카이빙 반응형 웹앱
 
@@ -16,14 +16,17 @@
 - 기능 정책과 입력 검증·권한·수용 기준: [PRODUCT_SPEC.md](PRODUCT_SPEC.md)
 - 추천 입력·랭킹·근거·피드백: [RECOMMENDATION_SYSTEM.md](../recommendation/RECOMMENDATION_SYSTEM.md)
 - 데이터 수집·저장·기술 구조: [DATA_AND_ARCHITECTURE.md](../data/DATA_AND_ARCHITECTURE.md)
-- 내비게이션·반응형·상태의 시각 표현: [DESIGN_AND_INTERACTION.md](../design/DESIGN_AND_INTERACTION.md)
+- 시각 언어와 component states: [DESIGN_SYSTEM.md](../design/DESIGN_SYSTEM.md)
+- breakpoint와 layout·navigation 위치: [RESPONSIVE.md](../design/RESPONSIVE.md)
+- 제스처·전환·playback과 접근성 interaction: [INTERACTION.md](../design/INTERACTION.md)
 - 결정 이력과 해결·보류 상태: [DECISION_LOG_AND_OPEN_QUESTIONS.md](../decisions/DECISION_LOG_AND_OPEN_QUESTIONS.md)
 
 ## 2. 흐름 작성 원칙
 
 - `For You`, `Articles`, `Reviews`만 전역 1차 메뉴로 사용한다.
 - 별도 `Alerts` 화면이나 메뉴를 만들지 않는다.
-- 기존 사용자의 로그인 직후에는 `For You`가 아니라 중립 상태의 `App Home`으로 이동한다.
+- 명시적 로그인 성공 직후에는 `For You`가 아니라 중립 상태의 `App Home`으로 이동한다.
+- 이미 로그인된 세션으로 PWA를 재실행하면 마지막 화면을 복원하고, 불가능하면 안전한 상위 화면으로 fallback한다.
 - 신규 사용자는 Skip할 수 없는 `Concert Taste Onboarding`을 완료한 뒤 `App Home`으로 이동한다.
 - `Reviews`와 공연 상세의 후기 영역에는 로그인한 사용자의 후기만 표시한다.
 - 좌석 추천은 지원 공연장에서 좌석 번호 또는 번호 범위까지 제시할 수 있지만 실시간 구매 가능 여부를 보장하지 않는다.
@@ -55,7 +58,7 @@ flowchart TD
     TC -->|"아니오"| T["Concert Taste Onboarding"]
     A -->|"Get Started"| T["Concert Taste Onboarding"]
     T --> H
-    G -->|"로그인"| H
+    G -->|"로그인 세션"| RST["마지막 화면 복원 또는 안전한 fallback"]
     H --> N{"1차 또는 유틸리티 메뉴"}
     N --> F["For You"]
     N --> AR["Articles"]
@@ -85,12 +88,15 @@ flowchart TD
     S --> P["Public Landing 또는 인증 진입"]
     W["웹 진입"] --> P
     P --> C{"사용자 선택"}
-    C -->|"Sign In"| SI["로그인"]
+    C -->|"Sign In"| SI["Google / Apple / email magic link"]
     C -->|"Get Started"| GS["신규 사용자 절차"]
     SI --> TC{"Concert Taste 완료?"}
     TC -->|"예"| H["App Home"]
     TC -->|"아니오"| T["Concert Taste Onboarding"]
     GS --> T["Concert Taste Onboarding"]
+    R["로그인 세션으로 PWA 재실행"] --> RS{"마지막 상태 복원 가능?"}
+    RS -->|"예"| L["마지막 화면"]
+    RS -->|"아니오"| SF["안전한 상위 화면"]
 ```
 
 ### 단계
@@ -99,19 +105,20 @@ flowchart TD
 | --- | --- | --- | --- |
 | 1 | Splash | 앱 진입 | 브랜드 화면 표시 후 다음 단계로 전환 |
 | 2 | Public Landing | 서비스 확인 | `Sign In`, `Get Started` 제공 |
-| 3A | Sign In | 인증 정보 제출 | 성공 시 Concert Taste 완료 여부 확인 |
+| 3A | Sign In | Google, Sign in with Apple 또는 email magic link로 인증 | 성공 시 Concert Taste 완료 여부 확인 |
 | 3B | Get Started | 신규 계정 절차 진행 | 인증 완료 후 `Concert Taste Onboarding` 이동 |
 
 ### 분기 및 예외
 
-- 이미 로그인한 사용자는 공개 랜딩과 인증을 건너뛰고 `App Home`으로 이동한다.
+- 이미 로그인한 세션은 공개 랜딩과 인증을 건너뛰고 마지막 화면과 복원 가능한 UI state를 복원한다. 복원할 수 없으면 안전한 상위 화면으로 이동한다.
 - 인증 실패 시 입력을 보존하고 인증 화면에 머무르며 재시도 경로를 제공한다.
 - 보호된 deep link로 진입한 비로그인 사용자의 인증 후 복귀 정책은 Open Question이다.
 - Splash 이후 상태별 정확한 도착 화면은 Open Question이다.
 
 ### 완료 조건
 
-- Concert Taste가 있는 사용자는 인증된 상태로 `App Home`에 도달한다.
+- 명시적 인증을 마친 Concert Taste 보유 사용자는 `App Home`에 도달한다.
+- 기존 로그인 세션 사용자는 마지막 화면 또는 안전한 상위 화면에 도달한다.
 - Concert Taste가 없는 사용자는 인증을 마치고 `Concert Taste Onboarding`에 도달한다.
 
 ## 6. UF-02 신규 사용자 Concert Taste 설정
@@ -129,12 +136,14 @@ flowchart TD
 ```mermaid
 flowchart TD
     G["Get Started 완료"] --> T["Concert Taste Onboarding"]
-    T --> C["Content Preferences"]
-    T --> E["Experience Preferences"]
-    C --> V{"전체 Preference 중 1개 이상?"}
-    E --> V
-    V -->|"아니오"| T
+    T --> AM{"Apple Music 연결?"}
+    AM -->|"예"| IMP["취향 seed 가져오기"]
+    AM -->|"취향 직접 입력하기"| D["Content / Experience Preferences"]
+    D --> V{"Preference 1개 이상?"}
+    V -->|"아니오"| D
     V -->|"예"| S["저장"]
+    IMP --> AC["imported taste 확인·완료 조건 — Open Question"]
+    AC --> S
     S --> H["App Home"]
 ```
 
@@ -148,16 +157,19 @@ flowchart TD
 ### 규칙
 
 - Skip을 제공하지 않는다.
-- 두 영역을 모두 반드시 입력할 필요는 없지만 Preference 전체에서 최소 하나는 있어야 한다.
+- Apple Music 연결을 첫 선택지로 제시하고 바로 아래에 `취향 직접 입력하기`를 제공한다.
+- Apple Music을 연결하지 않는 직접 입력 경로에서는 Preference 전체에서 최소 하나는 있어야 한다.
+- Content Preference category는 고정하고 canonical entity를 검색·선택한다. DB에 없는 관심사는 free-text keyword로 추가할 수 있다.
 - Experience Preference의 자연어 원문을 보존한다.
 - 외부 음악 서비스 연결 없이도 직접 입력만으로 완료할 수 있어야 한다.
+- AI 구조화 결과 확인은 onboarding 필수 단계가 아니다.
+- Sign in with Apple과 Apple Music authorization은 별개이며 연결 단계에서 별도 consent가 필요하다.
 
 ### 분기 및 예외
 
 - 입력이 하나도 없으면 완료할 수 없으며 현재 화면에서 입력을 안내한다.
 - 저장 실패 시 입력값을 잃지 않고 재시도할 수 있어야 한다.
-- AI 해석 결과의 확인·수정 단계를 필수로 둘지는 Open Question이다.
-- Apple Music을 입력 보조로 제공할지는 Open Question이다.
+- Apple Music imported taste 확인을 완료 조건으로 둘지, 어떤 데이터로 seed를 만들지와 classical/non-classical 분류는 Open Question이다.
 
 ### 완료 조건
 
@@ -189,19 +201,24 @@ flowchart TD
 | `Articles` 선택 | 아티클 목록으로 이동하고 `Articles` 활성 표시 |
 | `Reviews` 선택 | 내 후기 목록으로 이동하고 `Reviews` 활성 표시 |
 | 햄버거 메뉴 선택 | Account, My Concert Taste, Bookmarks, Settings 진입점 표시 |
+| LP stylus를 play zone으로 이동 | Apple Music 계열 음원 Play |
+| Playing LP 선택 | Pause; 다시 선택하면 Resume |
+| stylus를 resting position으로 이동 | Stop과 playback position 초기화 |
 
 ### 상태 규칙
 
 - `App Home`에서는 세 1차 메뉴가 모두 비선택 상태다.
 - LP는 기본 상태에서 노란 `resonance` 레이블을 표시한다.
-- 재생 상태가 존재한다면 흑백 작곡가·연주자 이미지로 전환한다.
+- 재생 중에는 흑백 작곡가·연주자 이미지로 전환한다.
+- Mobile/Tablet의 primary navigation은 하단에 있고 destination 선택 시 Home과 함께 위로 이동해 sticky top navigation이 된다.
+- Desktop은 left sidebar를 사용한다.
 
-### 미확정 연결
+### 확정 연결과 경계
 
-- 로고 선택 시 App Home으로 돌아가는지
-- LP가 실제 음악을 재생하는지, 시각적 상호작용만 제공하는지
-- 전역 검색을 MVP에 포함하는지
-- 기존 사용자 재로그인 시 항상 App Home으로 이동할지 마지막 화면을 복원할지
+- `resonance.` logo는 App Home으로 돌아간다. unsaved changes 보호가 필요하면 해당 정책이 우선한다.
+- 전역 검색은 MVP에서 제외하고 기능 내부 검색만 허용한다.
+- LP는 실제 playback UI이며 Apple Music / Apple Music Classical 계열만 사용한다.
+- 정확한 MusicKit 구현과 권한·오류 처리는 engineering 검증 대상이다.
 
 ## 8. UF-04 My Concert Taste 조회 및 수정
 
@@ -225,13 +242,14 @@ flowchart TD
 
 - Content Preferences와 Experience Preferences를 구분한다.
 - Experience Preference의 자연어 원문을 조회·수정할 수 있다.
+- AI가 만든 구조화 해석은 선택적으로 확인·수정할 수 있다.
 - 후기와 행동에서 추론한 `Learned Experience Signals`는 MVP에서 이 화면에 표시하지 않는다.
 - 저장된 변경은 이후 공연·좌석 추천에 반영한다.
 
 ### 분기 및 예외
 
 - 모든 Preference를 삭제하려 할 때 허용할지, 최소 한 개 규칙을 계속 적용할지는 Open Question이다.
-- AI가 해석한 구조화 결과를 사용자에게 보여줄지는 Open Question이다.
+- AI 해석 schema와 정확한 편집 표현은 Open Question이다.
 - 저장 실패 시 수정 중인 값을 보존한다.
 
 ### 완료 조건
@@ -277,6 +295,16 @@ flowchart TD
 | `Write Review` / 후기 남기기 | 해당 공연과 연결된 후기 작성 시작 |
 
 `All Events` 컨트롤과 그에 따른 분기는 존재하지 않는다.
+
+### NEW, unseen과 seen
+
+- `NEW`는 공연 최초 수집 후 7일간 유지하는 공연 상태이며 unseen/seen과 독립적이다.
+- 단순 렌더링, scroll 또는 viewport 노출만으로 seen 처리하지 않는다.
+- 공연 상세 열기, 좌석 추천 확인처럼 공연에 대한 의도적 행동 시 seen으로 전환한다.
+- seen이 되어도 7일 이내의 `NEW`는 유지한다.
+- seen 공연도 숨기거나 강등하지 않고 같은 피드 위치에 둔다.
+
+기본 ranking은 Concert Taste 적합도를 주축으로 하고 공연일 임박도와 신규성을 보조 신호로 사용한다. seen/unseen은 ranking 신호가 아니며 정확한 feature weight와 score formula는 Open Question이다.
 
 ### 빈 상태
 
@@ -354,7 +382,8 @@ flowchart TD
 
 - 하위 탭 사이를 이동해도 동일한 공연 맥락을 유지한다.
 - 타인의 후기 화면으로 연결되는 분기는 존재하지 않는다.
-- 상세 화면의 상위 1차 메뉴 활성 상태와 뒤로가기 복귀 위치는 Open Question이다.
+- global top primary navigation을 중첩하지 않고 compact header와 Back을 사용한다.
+- 논리적 parent primary context를 유지하고 Back 시 이전 list/feed scroll position과 가능한 UI state를 복원한다.
 
 ### 완료 조건
 
@@ -761,33 +790,40 @@ flowchart TD
 
 - 사용자가 Resonance의 경계를 이해한 상태로 공식 예매처에 도달한다.
 
-## 21. UF-17 LP 상태 전환 — 조건부 흐름
+## 21. UF-17 LP playback
 
 ### 목적
 
-Splash와 App Home의 LP를 하나의 일관된 브랜드 상태 시스템으로 연결한다.
+Splash와 App Home의 LP를 하나의 일관된 브랜드 상태 시스템과 실제 playback UI로 연결한다.
 
 ```mermaid
 stateDiagram-v2
-    [*] --> Idle
-    Idle --> Playing: needle on / play
-    Playing --> Paused: pause
-    Paused --> Playing: resume
-    Playing --> Idle: stop / reset
+    [*] --> IdleStop
+    IdleStop --> Playing: stylus를 play zone으로 이동
+    Playing --> Paused: LP tap/click
+    Paused --> Playing: LP tap/click
+    Playing --> IdleStop: stylus를 resting position으로 복귀
+    Paused --> IdleStop: stylus를 resting position으로 복귀
+    Playing --> IdleStop: track ended
 ```
 
-### 확정된 시각 방향
+### 입력과 상태
 
-- Idle: 노란 `resonance` 레이블
-- Playing: 흑백 작곡가·연주자 이미지와 LP 회전
+- Mobile/Tablet은 touch-drag, Desktop은 mouse/trackpad drag로 stylus를 이동한다.
+- Idle/Stop은 stylus resting position, LP 정지, playback position 0과 노란 `resonance` label이다.
+- Playing은 stylus가 play zone에 있고 LP가 회전하며 흑백 작곡가·연주자 portrait와 실제 음원 재생이 시작된다.
+- Paused는 stylus·portrait·position을 유지하고 LP 회전과 음원을 멈춘다.
+- Paused LP를 다시 tap/click하면 같은 position에서 Resume한다.
+- stylus를 resting position으로 돌리면 Stop하고 position과 label을 초기화한다.
+- track 종료 시 stylus 자동 복귀와 함께 Stop 상태로 전환한다.
 
 ### 경계
 
-- 실제 음원 재생 기능의 MVP 포함 여부는 Open Question이다.
-- 실제 재생을 포함하지 않는 프로토타입에서는 시각 상태 전환만 검증할 수 있다.
-- Paused와 Error의 정확한 시각 표현은 디자인 명세에서 확정한다.
+- 재생 소스는 Apple Music / Apple Music Classical 계열만 사용한다.
+- 실제 MusicKit 권한, catalog mapping, background 전환과 오류 처리는 engineering 단계에서 검증한다.
+- Paused와 Error의 정확한 시각 표현 및 drag의 accessible 대체 조작은 [Design System](../design/DESIGN_SYSTEM.md)과 [Interaction](../design/INTERACTION.md)의 Open Questions를 따른다.
 
-이 흐름은 음악 재생 기능이 확정되기 전까지 핵심 MVP 완료 조건에 포함하지 않는다.
+제품 차원에서 실제 재생 여부와 제공자 범위는 더 이상 Open Question이 아니다.
 
 ## 22. UF-18 전역 메뉴 전환 및 유틸리티 진입
 
@@ -817,9 +853,16 @@ stateDiagram-v2
 - `For You`: `For You`만 선택
 - `Articles`: `Articles`만 선택
 - `Reviews`: `Reviews`만 선택
-- `Concert Detail`: 진입 경로에 따른 상위 메뉴 활성 상태는 Open Question
-- `Article Detail`: 전역 Articles 또는 Concert Detail 중 진입 경로에 따른 활성 상태는 Open Question
-- `Review Detail`: 전역 Reviews 또는 Concert Detail 중 진입 경로에 따른 활성 상태는 Open Question
+- `Concert Detail`, `Article Detail`, `Review Detail`: global top primary navigation을 중첩하지 않고 compact header와 Back을 사용
+
+### Primary menu 전환
+
+- Mobile/Tablet App Home에서는 primary navigation이 화면 하단에 있고 모두 비선택이다.
+- destination 선택 시 Home 콘텐츠와 navigation이 위로 이동하고 같은 component가 sticky top navigation이 된다.
+- logo로 App Home에 돌아오면 반대 transition으로 navigation이 하단에 복귀하고 LP가 다시 나타난다.
+- top navigation 메뉴를 직접 선택하면 slide 없이 즉시 전환한다.
+- 콘텐츠를 좌우 swipe하면 인접 menu로 이동하며 콘텐츠가 gesture를 따라 slide한다.
+- Desktop은 left sidebar를 사용하며 swipe를 강제하지 않는다.
 
 ## 23. 공통 상태 요구사항
 
@@ -838,11 +881,12 @@ stateDiagram-v2
 ## 24. 반응형 흐름 원칙
 
 - 모바일·태블릿·PC에서 목표와 단계 순서는 동일하다.
-- 모바일에서는 상단 가로 메뉴를 통해 세 1차 영역을 전환한다.
-- 데스크톱에서는 좌측 사이드 메뉴를 통해 동일한 영역을 전환한다.
-- 태블릿 내비게이션은 Open Question이다.
+- Mobile은 `<768px`, Tablet은 `768–1199px`, Desktop은 `>=1200px`다.
+- Mobile/Tablet App Home에서는 하단 navigation, primary content에서는 같은 component의 sticky top navigation을 사용한다.
+- Desktop에서는 left sidebar를 통해 같은 영역을 전환한다.
 - 화면 크기가 변해도 현재 사용자, 선택한 공연, 선택한 추천안, 읽던 아티클, 작성 중인 후기 맥락이 임의로 바뀌지 않아야 한다.
-- breakpoint, 내비게이션 고정, 스크롤 위치 보존과 상세 화면의 내비게이션 유지 범위는 별도 Responsive·Navigation Rules에서 확정한다.
+- 상세 화면은 breakpoint와 무관하게 compact header와 Back을 사용하고 가능한 이전 scroll·UI state를 복원한다.
+- 세부 reflow와 state 보존은 [Responsive](../design/RESPONSIVE.md), gesture와 transition은 [Interaction](../design/INTERACTION.md)을 따른다.
 
 ## 25. 범위에서 제외된 사용자 흐름
 
@@ -864,69 +908,75 @@ stateDiagram-v2
 
 ## 26. Open Questions
 
-### 인증과 초기 설정
+### 이번 동기화에서 해결된 흐름 질문
 
-1. Splash 이후 상태별 정확한 도착 화면은 어디인가?
-2. 인증 방식과 신규 사용자 가입 단계는 무엇인가?
-3. 보호된 deep link의 인증 후 원래 화면 복귀를 지원하는가?
-4. 기존 사용자 재로그인 시 App Home과 마지막 화면 중 어디로 이동하는가? UF-01·D-003과의 관계는 [결정 로그](../decisions/DECISION_LOG_AND_OPEN_QUESTIONS.md)의 DR-002 참조.
-5. Concert Taste 수정 후에도 최소 한 개 Preference 규칙을 유지하는가?
-6. Experience Preference의 AI 해석 확인 단계를 필수로 두는가?
-7. Apple Music 입력 보조를 MVP에 포함하는가?
+| 기존 질문 | 해결 Decision |
+| --- | --- |
+| 인증 방식과 재진입 | D-003·D-036 |
+| Experience Preference AI 확인과 Content Preference 입력 | D-037 |
+| Apple Music onboarding 포함 여부 | D-038 |
+| logo, detail navigation, Back | D-034 |
+| LP 실제 재생·제공자·상태 | D-025·D-039 |
+| 전역 검색 MVP 포함 | D-035 |
+| For You 정렬·NEW·seen | D-032 |
+| breakpoint와 Mobile/Tablet navigation | D-033 |
 
-### App Home과 전역 이동
+### 현재 남은 흐름 질문
 
-8. 로고 선택 시 App Home으로 이동하는가?
-9. LP는 실제 음악을 재생하는가, 시각적 상호작용만 제공하는가?
-10. 실제 재생을 한다면 어떤 제공자와 연결하는가?
-11. 전역 검색을 MVP에 포함하는가?
-12. 상세·유틸리티 화면에서 active 메뉴와 뒤로가기 맥락을 어떻게 유지하는가?
+#### 인증과 초기 설정
 
-### For You와 알림
+1. Splash 이후 상태별 정확한 도착 화면과 표시 시간은 무엇인가?
+2. 보호된 deep link의 인증 후 원래 화면 복귀를 지원하는가?
+3. provider 간 계정 연결과 계정 복구 흐름은 무엇인가?
+4. Concert Taste 수정 후에도 최소 한 개 Preference 규칙을 유지하는가?
+5. Apple Music imported taste를 사용자가 confirm해야 완료하는가?
+6. 어떤 Apple Music 데이터를 seed로 사용하고 classical/non-classical을 어떻게 분류하는가?
 
-13. 추천 공연이 없을 때 My Concert Taste, 다른 탐색, 재확인 중 무엇을 우선 제공하는가?
-14. For You의 정렬, 신규 표시, 이미 본 공연 처리 기준은 무엇인가?
-15. 실제 MVP 알림 전달 채널은 무엇인가?
-16. 알림 읽음 상태를 보존하는가?
-17. 공연 취소·일시·출연자·프로그램 변경 알림을 어떻게 처리하는가?
+#### Navigation, App Home과 For You
 
-### 좌석 추천과 예매
+7. unsaved changes 보호와 복원 불가능한 복합 UI state의 정확한 처리 방식은 무엇인가?
+8. MusicKit 권한·재생 오류·background 복귀 흐름은 무엇인가?
+9. 추천 공연이 없을 때 My Concert Taste, 다른 탐색, 재확인 중 무엇을 우선 제공하는가?
+10. Concert Taste 적합도, 공연일 임박도와 신규성의 정확한 ranking weight는 무엇인가?
+11. 실제 MVP 알림 전달 채널은 무엇인가?
+12. 알림 읽음 상태를 보존하는가?
+13. 공연 취소·일시·출연자·프로그램 변경 알림을 어떻게 처리하는가?
 
-18. 추천 생성 실패·근거 부족·미지원 홀에서 어떤 대체 행동을 제공하는가?
-19. 추천 score, confidence 및 후기 근거를 어느 수준까지 노출하는가?
-20. 좌석도의 확대·이동·추천안 비교 interaction은 무엇인가?
-21. 외부 예매처에서 돌아오면 원래 공연·탭·추천안 상태를 복원하는가?
-22. 실제 예매 완료 여부를 사용자 행동 신호로 확인하는가?
+#### 좌석 추천과 예매
 
-### Articles와 Bookmarks
+14. 추천 생성 실패·근거 부족·미지원 홀에서 어떤 대체 행동을 제공하는가?
+15. 추천 score, confidence 및 후기 근거를 어느 수준까지 노출하는가?
+16. 좌석도의 확대·이동·추천안 비교 interaction은 무엇인가?
+17. 외부 예매처에서 돌아오면 원래 공연·탭·추천안 상태를 복원하는가?
+18. 실제 예매 완료 여부를 사용자 행동 신호로 확인하는가?
 
-23. Article List의 분류·검색·정렬은 무엇인가?
-24. `전체 글 보기`는 현재 화면 확장인가, 별도 화면 이동인가?
-25. 관련 공연으로 이동했다 돌아왔을 때 읽던 위치를 보존하는가?
-26. Article Bookmark를 추천 신호로 사용하는가?
-27. Bookmarks 빈 상태에서 어떤 탐색 행동으로 연결하는가?
-28. 저장 해제 후 과거 행동 신호를 얼마나 보존하는가?
+#### Articles와 Bookmarks
 
-### Reviews
+19. Article List의 분류·기능 내부 검색·정렬은 무엇인가?
+20. `전체 글 보기`는 현재 화면 확장인가, 별도 화면 이동인가?
+21. 관련 공연으로 이동했다 돌아왔을 때 읽던 위치를 보존하는가?
+22. Article Bookmark를 추천 신호로 사용하는가?
+23. Bookmarks 빈 상태에서 어떤 탐색 행동으로 연결하는가?
+24. 저장 해제 후 과거 행동 신호를 얼마나 보존하는가?
 
-29. 여섯 평가 항목과 전 항목 5점 척도를 최종 확정하는가?
-30. 좌석 정보가 없을 때 좌석 경험 평가를 숨기는가, 선택 입력으로 두는가?
-31. 좌석 직접 입력·좌석도 선택·추천 불러오기 중 어떤 방식을 MVP에 포함하는가?
-32. `Attendance 1 : Review 1` 모델을 채택하는가?
-33. Review의 최소 필수 필드와 검증 규칙은 무엇인가?
-34. 임시 저장과 작성 취소 확인을 제공하는가? 공통 Unsaved changes 요구와의 관계는 [결정 로그](../decisions/DECISION_LOG_AND_OPEN_QUESTIONS.md)의 DR-004 참조.
-35. 후기 작성 가능 시점과 실제 관람 확인 절차가 필요한가?
-36. 후기 삭제를 복구할 수 있는가?
-37. 저장·수정·삭제 완료 후 정확한 도착 화면은 어디인가? UF-12·UF-13 본문과의 관계는 [결정 로그](../decisions/DECISION_LOG_AND_OPEN_QUESTIONS.md)의 DR-003 참조.
-38. 후기 목록의 검색·정렬·필터는 무엇인가?
+#### Reviews
 
-### 반응형·접근성
+25. 여섯 평가 항목과 전 항목 5점 척도를 최종 확정하는가?
+26. 좌석 정보가 없을 때 좌석 경험 평가를 숨기는가, 선택 입력으로 두는가?
+27. 좌석 직접 입력·좌석도 선택·추천 불러오기 중 어떤 방식을 MVP에 포함하는가?
+28. `Attendance 1 : Review 1` 모델을 채택하는가?
+29. Review의 최소 필수 필드와 검증 규칙은 무엇인가?
+30. 임시 저장과 작성 취소 확인을 제공하는가? [DR-004](../decisions/DECISION_LOG_AND_OPEN_QUESTIONS.md#dr-004-입력-손실-보호와-취소-확인의-경계) 참조.
+31. 후기 작성 가능 시점과 실제 관람 확인 절차가 필요한가?
+32. 후기 삭제를 복구할 수 있는가?
+33. 저장·수정·삭제 완료 후 정확한 도착 화면은 어디인가? UF-12·13 본문과의 충돌은 [DR-003](../decisions/DECISION_LOG_AND_OPEN_QUESTIONS.md#dr-003-후기-저장수정삭제-완료-도착점)에서 결정한다.
+34. 후기 목록의 검색·정렬·필터는 무엇인가?
 
-39. 모바일·태블릿·데스크톱 breakpoint는 무엇인가?
-40. 태블릿 전역 내비게이션은 어떤 형식인가?
-41. 데스크톱 좌측 내비게이션은 어떤 인증·상세 화면에서 유지되는가?
-42. 모바일 가로 메뉴와 햄버거 메뉴의 고정·스크롤 동작은 무엇인가?
-43. 좌석도·평점·LP interaction의 키보드 및 screen reader 조작은 무엇인가?
+#### 반응형·접근성
+
+35. Desktop left sidebar를 인증·utility 화면에서 유지할 정확한 범위는 무엇인가?
+36. 좌석도·평점·LP interaction의 keyboard 및 screen reader 조작은 무엇인가?
+37. reduced motion 환경에서 navigation과 LP motion을 어떻게 표현하는가?
 
 ## 27. IA 추적표
 
@@ -950,7 +1000,7 @@ stateDiagram-v2
 | App Home LP | UF-17 |
 | 전역·유틸리티 내비게이션 | UF-03, UF-04, UF-11, UF-18 |
 
-## 28. v0.2 변경 기록
+## 28. v0.3 변경 기록
 
 | 변경 | 반영 결과 |
 | --- | --- |
@@ -970,5 +1020,12 @@ stateDiagram-v2
 | Learned Experience Signals | 후기 저장 후 비가시적 피드백 효과 반영 |
 | LP 상태 방향 | 조건부 UF-17 추가 |
 | YouTube 활용 폐기 | 제외 흐름에 반영 |
+| For You 상태와 정렬 | NEW 7일, 의도적 seen 전환, 동일 feed 유지와 ranking 신호 경계 반영 |
+| App Home navigation | Mobile/Tablet bottom→sticky top transition, Desktop left sidebar 반영 |
+| Primary menu 이동 | 직접 선택 즉시 전환과 인접 swipe slide 반영 |
+| logo와 detail Back | Home 복귀, compact header와 list/feed 상태 복원 반영 |
+| 인증·재진입 | Google·Apple·email magic link, 명시적 로그인과 세션 재실행 분리 |
+| Concert Taste onboarding | Apple Music 우선·직접 입력 대안, 고정 category·free text, AI 확인 선택 반영 |
+| LP playback | Play/Pause/Resume/Stop/track-ended와 Apple Music source 반영 |
 
-이 문서는 기존 `user-flow.md` v0.1의 확정 흐름과 `05_USER_FLOW_ADDENDUM.md`의 최신 결정을 [IA.md](IA.md) v0.3 기준으로 통합한 현행 User Flow다.
+이 문서는 기존 `user-flow.md` v0.1의 확정 흐름과 `05_USER_FLOW_ADDENDUM.md`의 최신 결정 및 2026-09-15 Decision Checkpoint를 [IA.md](IA.md) v0.4 기준으로 통합한 현행 User Flow다.

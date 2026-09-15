@@ -14,7 +14,9 @@ from markdown_it import MarkdownIt
 
 EXCLUDED_DIRS = {
     ".git", ".venv", "venv", "node_modules", "dist", "build", "coverage",
-    "__pycache__", ".pytest_cache", ".next", ".cache",
+    "__pycache__", ".pytest_cache", ".next", ".cache", "out",
+    "test-results", "playwright-report", ".local-data", ".local-assets",
+    ".local-secrets",
 }
 EXTERNAL_SCHEMES = {"http", "https", "mailto", "tel", "data"}
 

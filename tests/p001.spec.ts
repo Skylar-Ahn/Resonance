@@ -10,7 +10,7 @@ const balanced = '전체 음향 균형 우선';
 async function screenshot(page: Page, device: string, name: string) {
   await page.evaluate(() => window.scrollTo(0, 0));
   await page.evaluate(async () => { await document.fonts.ready; await Promise.all([...document.images].map(img => img.decode().catch(() => undefined))); });
-  const directory = path.join('docs', 'tasks', 'P-001-captures');
+  const directory = path.join('test-results', 'p001-captures');
   await mkdir(directory, { recursive: true });
   await page.screenshot({ path: path.join(directory, `${device}-${name}.png`), fullPage: true, animations: 'disabled' });
 }

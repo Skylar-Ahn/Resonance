@@ -1,6 +1,6 @@
 # Resonance — Information Architecture
 
-> 문서 상태: Working Baseline v0.3  
+> 문서 상태: Working Baseline v0.4
 > 기준일: 2026-09-15  
 > 제품: 클래식 공연 추천·좌석 추천·아티클·개인 후기 아카이빙 반응형 웹앱  
 > 대체 문서: `IA_rsn.md` Draft v0.2 (저장소에 없는 역사적 원본명)\
@@ -50,6 +50,8 @@ MVP의 핵심 기능은 다음 네 축이다.
 - 공연과 아티클은 모두 Bookmarks에 저장할 수 있으며 서로 다른 탭에서 관리한다.
 - `Reviews`는 공개 커뮤니티가 아니라 로그인 사용자가 소유한 개인 기록이다.
 - 추천과 아티클의 근거가 되는 정보를 사용자가 다시 확인할 수 있어야 한다.
+- MVP 인증은 Google, Sign in with Apple, email magic link를 제공한다.
+- 전역 검색은 MVP에서 제외하며 기능 내부 검색만 허용한다.
 
 ## 4. 전체 사이트맵
 
@@ -62,8 +64,10 @@ Resonance
 │     ├─ Sign In
 │     └─ Get Started
 │        └─ Concert Taste Onboarding — 필수
-│           ├─ Content Preferences
-│           └─ Experience Preferences
+│           ├─ Apple Music 연결 — 우선 선택지, 별도 MusicKit 권한
+│           └─ 취향 직접 입력하기 — 대안
+│              ├─ Content Preferences
+│              └─ Experience Preferences
 │
 └─ 인증 영역
    ├─ App Home — 중립 홈
@@ -136,7 +140,7 @@ Splash의 표시 시간과 다음 화면 전환 조건은 Open Question이다.
 **목적**  
 Concert Taste, Bookmarks, 추천 기록 및 개인 후기를 사용자 계정에 연결하고 보존한다.
 
-인증 방식과 계정 복구 정책은 Open Question이다.
+MVP 인증 방식은 Google, Sign in with Apple, email magic link다. Resonance 자체 비밀번호를 별도로 관리하지 않는 방향이며 계정 연결·복구의 세부 정책은 Open Question이다.
 
 ### 5.4 Concert Taste Onboarding
 
@@ -147,7 +151,8 @@ Concert Taste, Bookmarks, 추천 기록 및 개인 후기를 사용자 계정에
 
 - `Get Started` 흐름에 포함한다.
 - Skip을 제공하지 않는다.
-- Preference 전체에서 최소 한 개를 입력해야 완료할 수 있다.
+- Apple Music 연결을 첫 선택지로, 그 아래 `취향 직접 입력하기`를 대안으로 제공한다.
+- Apple Music을 연결하지 않은 직접 입력 경로에서는 Preference를 최소 한 개 입력·선택해야 완료할 수 있다.
 - 외부 음악 서비스 연결 없이 직접 입력만으로 완료할 수 있어야 한다.
 
 #### Content Preferences
@@ -161,15 +166,15 @@ Concert Taste, Bookmarks, 추천 기록 및 개인 후기를 사용자 계정에
 - 앙상블·공연 형식
 - 음악적 스타일 또는 관심 키워드
 
-정확한 카테고리와 검색·직접 추가 방식은 Open Question이다.
+카테고리는 작곡가, 작품, 연주자·지휘자, 악기, 앙상블·공연 형식, 음악적 스타일·관심 키워드로 고정한다. canonical entity가 있으면 검색 결과에서 선택하고 DB에 없는 맥락적 관심사는 free-text keyword로 추가할 수 있다.
 
 #### Experience Preferences
 
 “공연장에서 어떻게 경험하고 싶은가?”를 자연어로 입력한다.
 
-조건부 취향을 고정 체크박스나 태그만으로 제한하지 않으며 자연어 원문을 보존한다. AI가 해석한 구조화 결과를 사용자가 확인해야 하는지는 Open Question이다.
+조건부 취향을 고정 체크박스나 태그만으로 제한하지 않으며 자연어 원문을 보존한다. AI는 추천을 위한 구조화 해석을 만들 수 있지만 확인을 온보딩 필수 단계로 두지 않는다. 사용자는 `My Concert Taste`에서 선택적으로 해석을 확인·수정할 수 있다.
 
-Apple Music 등 외부 음악 서비스는 선택적 입력 보조 후보일 뿐 현재 IA에 필수 화면이나 완료 조건으로 포함하지 않는다.
+Apple Music 연결은 온보딩의 우선 입력 경로지만 필수 조건은 아니다. imported taste 확인 필요 여부, seed로 사용할 데이터, classical/non-classical 분류 기준은 Open Question이다. Sign in with Apple은 계정 인증이고 Apple Music 개인 데이터 접근은 별도 MusicKit 사용자 권한을 요구한다.
 
 ## 6. 인증 영역의 전역 화면
 
@@ -185,12 +190,14 @@ Apple Music 등 외부 음악 서비스는 선택적 입력 보조 후보일 뿐
 - 햄버거 메뉴로 유틸리티 영역에 접근한다.
 - LP를 중심 브랜드 오브젝트로 사용한다.
 
-**LP 상태 방향**
+**LP playback 구조**
 
 - 기본 상태: 노란 `resonance` 레이블
-- 재생 상태: 흑백 작곡가 또는 연주자 이미지
+- stylus를 LP play zone으로 옮기면 실제 음원을 재생하고 흑백 작곡가 또는 연주자 이미지를 표시한다.
+- LP 선택은 Pause/Resume, stylus의 resting position 복귀는 Stop이다.
+- track 종료 시 자동 Stop, 위치 초기화와 노란 레이블 복귀가 일어난다.
 
-실제 음악 재생을 MVP 기능으로 포함할지, 시각적 인터랙션으로만 사용할지는 Open Question이다. 자세한 상태 표현은 [DESIGN_AND_INTERACTION.md](../design/DESIGN_AND_INTERACTION.md)에서 다룬다.
+재생 소스는 Apple Music / Apple Music Classical 계열로 한정한다. 실제 MusicKit 지원 범위와 권한·catalog mapping은 engineering 검증 대상이다. 자세한 표현과 상태 전환은 [Design System](../design/DESIGN_SYSTEM.md)과 [Interaction](../design/INTERACTION.md)에서 다룬다.
 
 ### 6.2 햄버거 메뉴
 
@@ -216,9 +223,10 @@ Apple Music 등 외부 음악 서비스는 선택적 입력 보조 후보일 뿐
 ### 7.1 반응형 표현
 
 - 메뉴명과 계층 관계는 모든 화면 크기에서 동일하다.
-- 모바일에서는 콘텐츠 상단의 가로 내비게이션으로 표현한다.
-- 데스크톱에서는 좌측 사이드 내비게이션으로 표현한다.
-- 태블릿 표현, 정확한 breakpoint, 고정 여부 및 스크롤 동작은 Open Question이다.
+- Mobile(`<768px`)과 Tablet(`768–1199px`)의 App Home에서는 화면 하단에 두고 아무 메뉴도 active로 표시하지 않는다.
+- destination 선택 시 Home 콘텐츠와 같은 navigation이 위로 이동해 content screen의 sticky top navigation이 된다.
+- Desktop(`>=1200px`)에서는 left sidebar로 표현하고 Mobile/Tablet 전환을 복제하지 않는다.
+- primary menu 직접 선택은 즉시 전환하고, Mobile/Tablet 콘텐츠 swipe는 인접 메뉴를 gesture에 따라 slide한다.
 
 ### 7.2 활성 상태
 
@@ -226,7 +234,9 @@ Apple Music 등 외부 음악 서비스는 선택적 입력 보조 후보일 뿐
 - `For You`: `For You` 선택
 - `Articles`: `Articles` 선택
 - `Reviews`: `Reviews` 선택
-- 상세 화면에서 진입 경로에 따른 상위 메뉴 활성 상태는 Open Question이다.
+- `Concert Detail`, `Article Detail`, `Review Detail`: global top navigation을 중첩하지 않고 compact header와 Back을 사용한다. 논리적 parent context와 이전 list/feed의 scroll·복원 가능한 UI state를 유지한다.
+
+`resonance.` logo는 App Home으로 이동한다. unsaved changes 보호가 필요한 화면에서는 입력 손실 보호 정책을 먼저 적용한다. 세부 navigation 구조는 [Responsive](../design/RESPONSIVE.md)와 [Interaction](../design/INTERACTION.md)을 따른다.
 
 ## 8. 핵심 화면별 정보 구조
 
@@ -244,6 +254,14 @@ Concert Taste에 맞는 공연을 발견하고, 추천 좌석과 이유를 빠�
 - 개인화 좌석 추천 요약
 - 추천 이유 요약
 - 저장 상태
+
+**상태와 기본 정렬**
+
+- `NEW`는 공연 최초 수집 후 7일간 유지하며 seen 전환과 독립적이고 공연 정보 수정으로 기간을 다시 시작하지 않는다.
+- viewport 노출만으로 seen 처리하지 않고 공연 상세 열기·좌석 추천 확인 등 의도적 행동 시 seen 처리한다.
+- seen 공연은 숨기거나 강등하지 않고 같은 피드 위치에 유지한다.
+- 기본 ranking은 Concert Taste 적합도를 주축으로 하고 공연일 임박도와 신규성을 보조 신호로 사용한다.
+- seen/unseen은 ranking 신호가 아니다. 정확한 feature weight와 score formula는 Open Question이다.
 
 **연결**
 
@@ -517,9 +535,10 @@ flowchart TD
 | --- | --- | --- |
 | 모바일·PWA 실행 | Splash | 브랜드 진입 화면 |
 | 비인증 웹 진입 | Public Landing | 서비스 소개와 인증 진입 |
-| Sign In 성공 | App Home | 중립 홈으로 이동 |
+| 명시적 Sign In 성공 | App Home | 중립 홈으로 이동 |
+| 로그인 세션으로 PWA 재실행 | 마지막 화면 또는 안전한 상위 화면 | 복원 가능한 화면·상태는 유지하고 유효하지 않으면 fallback |
 | 신규 Get Started | Concert Taste Onboarding | 필수 Preference 설정 |
-| Onboarding 완료 | App Home | Preference 최소 1개 충족 후 이동 |
+| Onboarding 완료 | App Home | 직접 입력은 Preference 최소 1개; Apple Music 경로의 confirm 조건은 Open Question |
 | App Home | For You / Articles / Reviews | 선택한 1차 영역으로 이동 |
 | 햄버거 메뉴 | Account / My Concert Taste / Bookmarks / Settings | 유틸리티 영역 진입 |
 | 공연 알림 | Concert Detail | 별도 Alerts 화면 없이 해당 공연으로 deep link |
@@ -537,6 +556,7 @@ flowchart TD
 
 ### MVP에서 제외
 
+- 전역 통합 검색. 기능 내부 검색은 허용하며 전역 검색은 Later 후보
 - 실시간 잔여 좌석 조회와 구매 가능 좌석 보장
 - Resonance 내부 좌석 선택·결제·예매 완료
 - 공연 전 기대 곡·사전 감상 메모
@@ -555,6 +575,7 @@ flowchart TD
 
 ### Later
 
+- 전역 통합 검색
 - Learned Experience Signals를 설명하는 Taste Insight
 - 후기·아티클·프로그램북·공연 상세 이미지를 조합한 개인 매거진
 - 개인 후기의 선택적 공유
@@ -562,72 +583,83 @@ flowchart TD
 - 공식 예매 플랫폼 API를 통한 실시간 재고 연동
 - 뮤지컬 좌석 평가로의 확장
 
-## 12. Open Questions
+## 12. Open Questions와 해결 기록
 
-아래 항목은 IA 또는 화면·연결 구조에 영향을 주지만 아직 결정되지 않았다. 결정 전까지 임의로 구현하지 않는다.
+### 12.1 이번 동기화에서 해결된 항목
 
-### 인증과 초기 설정
+| 기존 질문 | 해결 Decision |
+| --- | --- |
+| 인증 방식 | D-036: Google, Sign in with Apple, email magic link |
+| 명시적 로그인과 로그인 세션 재진입 | D-003·D-036: 로그인 직후 App Home, PWA 재실행은 마지막 화면 복원 |
+| Content Preference 카테고리·검색·직접 추가 | D-037 |
+| Experience Preference AI 확인의 필수 여부 | D-037: 온보딩 필수 아님, My Concert Taste에서 선택 확인 |
+| Apple Music 온보딩 포함 여부 | D-038: 우선 경로로 포함, 직접 입력 대안 유지 |
+| LP 실제 재생과 제공자 | D-025·D-039: 실제 playback, Apple Music 계열 한정 |
+| logo, detail Back과 global navigation | D-034 |
+| 전역 검색 MVP 포함 | D-035: MVP 제외, Later 후보 |
+| For You 정렬·NEW·seen 처리 | D-032 |
+| breakpoint와 Mobile/Tablet navigation | D-033 |
 
-1. 인증 방식과 계정 복구 정책은 무엇인가?
-2. Splash 이후 비인증·인증 상태별 정확한 도착 화면은 어디인가?
-3. 기존 사용자의 재로그인 시 항상 App Home으로 이동하는가, 마지막 화면을 복원하는가? D-003·본문과의 관계는 [결정 로그](../decisions/DECISION_LOG_AND_OPEN_QUESTIONS.md)의 DR-002 참조.
-4. Content Preferences의 정확한 카테고리와 검색·직접 추가 방식은 무엇인가?
-5. Experience Preference의 AI 해석 결과를 사용자가 반드시 확인·수정하는가?
-6. Apple Music 연결을 MVP 온보딩 보조로 포함하는가?
+### 12.2 현재 남은 Open Questions
 
-### App Home과 전역 이동
+#### 인증과 초기 설정
 
-7. LP는 실제 음악을 재생하는가, 시각적 상호작용만 제공하는가?
-8. 실제 재생을 한다면 어떤 제공자와 연결 방식을 사용하는가?
-9. 로고 선택 시 모든 화면에서 App Home으로 이동하는가?
-10. 전역 검색을 MVP에 포함하는가? 포함한다면 검색 대상과 결과 구조는 무엇인가?
-11. 상세 화면에서 진입 경로에 따른 1차 메뉴 활성 상태와 뒤로가기 맥락을 어떻게 유지하는가?
+1. Splash 이후 비인증·인증 상태별 정확한 도착 화면과 표시 시간은 무엇인가?
+2. 보호된 deep link의 인증 후 원래 화면 복귀를 지원하는가?
+3. provider 간 계정 연결, 계정 복구와 email 변경 정책은 무엇인가?
+4. Concert Taste 수정 후에도 Preference 최소 한 개 규칙을 유지하는가?
+5. Apple Music imported/inferred taste 중 최소 한 개를 사용자가 confirm해야 완료하는가?
+6. Apple Music의 recently played, favorites, library, Replay 등 어떤 데이터를 seed로 사용하는가?
+7. classical/non-classical 데이터를 어떤 기준으로 필터링·분류하는가?
 
-### For You와 알림
+#### Navigation과 App Home
 
-12. For You의 정렬, 신규 표시, 이미 본 공연 처리 기준은 무엇인가?
-13. 실제 MVP 알림 전달 채널은 무엇인가?
-14. 알림 읽음 상태를 보존하는가?
-15. 공연 취소·일시·출연자·프로그램 변경을 어떻게 알리는가?
-16. 추천 공연이 없을 때 어느 설정 또는 행동으로 연결하는가?
+8. unsaved changes 보호를 확인, draft 또는 다른 수단 중 무엇으로 구현하는가?
+9. list/feed scroll과 복합 UI state를 어느 기간과 범위까지 복원하는가?
+10. Desktop left sidebar를 인증·utility 화면에서 유지할 정확한 범위는 무엇인가?
 
-### 좌석 추천과 예매
+#### For You와 알림
 
-17. MVP에서 우선 지원할 공연장·홀의 목록과 순서는 무엇인가?
-18. 좌석 배치도의 확대·이동·추천안 비교·선택 구조는 무엇인가?
-19. 추천 score, confidence 및 후기 근거를 사용자에게 어느 수준까지 노출하는가?
-20. 추천 생성 실패 또는 근거 부족 시 어떤 후속 행동을 제공하는가?
-21. 외부 예매처에서 돌아왔을 때 원래 공연과 탭을 복원하는가?
+11. Concert Taste 적합도, 공연일 임박도와 신규성의 정확한 feature weight·score formula는 무엇인가?
+12. 실제 MVP 알림 전달 채널은 무엇인가?
+13. 알림 읽음 상태를 보존하는가?
+14. 공연 취소·일시·출연자·프로그램 변경을 어떻게 알리는가?
+15. 추천 공연이 없을 때 어느 설정 또는 행동으로 연결하는가?
 
-### Articles
+#### 좌석 추천과 예매
 
-22. 아티클 목록의 분류·검색·정렬 기준은 무엇인가?
-23. 아티클 생성·검수·게시 및 저작권 정책은 무엇인가?
-24. Article Bookmark를 추천 신호로 사용하는가?
+16. MVP에서 우선 지원할 공연장·홀의 목록과 순서는 무엇인가?
+17. 좌석 배치도의 확대·이동·추천안 비교·선택 구조는 무엇인가?
+18. 추천 score, confidence 및 후기 근거를 사용자에게 어느 수준까지 노출하는가?
+19. 추천 생성 실패 또는 근거 부족 시 어떤 후속 행동을 제공하는가?
+20. 외부 예매처에서 돌아왔을 때 원래 공연·탭·추천안을 복원하는가?
 
-### Reviews
+#### Articles
 
-25. 여섯 평가 항목과 전 항목 5점 척도를 최종 확정하는가?
-26. 좌석 정보가 없을 때 좌석 경험 항목을 숨기는가, 선택 입력으로 남기는가?
-27. 한 공연의 여러 기록을 `Attendance 1 : Review 1`로 모델링하는가?
-28. Review의 최소 필수 필드와 검증 규칙은 무엇인가?
-29. 임시 저장, 작성 취소 확인 및 삭제 복구를 제공하는가?
-30. 후기 목록의 검색·정렬·필터 기준은 무엇인가?
-31. 후기 작성 가능 시점과 실제 관람 여부 확인 절차가 필요한가?
+21. 아티클 목록의 분류·기능 내부 검색·정렬 기준은 무엇인가?
+22. 아티클 생성·검수·게시 및 저작권 정책은 무엇인가?
+23. Article Bookmark를 추천 신호로 사용하는가?
 
-### Bookmarks·Account·Settings
+#### Reviews
 
-32. 저장 해제 후 과거 행동 신호를 얼마나 보존하는가?
-33. Account의 세부 정보와 계정 관리 항목은 무엇인가?
-34. Settings의 알림·개인화·접근성 항목은 무엇인가?
+24. 여섯 평가 항목과 전 항목 5점 척도를 최종 확정하는가?
+25. 좌석 정보가 없을 때 좌석 경험 항목을 숨기는가, 선택 입력으로 남기는가?
+26. 한 공연의 여러 기록을 `Attendance 1 : Review 1`로 모델링하는가?
+27. Review의 최소 필수 필드와 검증 규칙은 무엇인가?
+28. 임시 저장, 작성 취소 확인 및 삭제 복구를 제공하는가?
+29. 후기 목록의 검색·정렬·필터 기준은 무엇인가?
+30. 후기 작성 가능 시점과 실제 관람 여부 확인 절차가 필요한가?
 
-### 반응형 UI와 접근성
+#### Bookmarks·Account·Settings
 
-35. 모바일·태블릿·데스크톱 breakpoint는 어떻게 정의하는가?
-36. 태블릿의 전역 내비게이션 형식은 무엇인가?
-37. 데스크톱 좌측 내비게이션은 어떤 인증 화면과 상세 화면에서 유지되는가?
-38. 모바일 가로 메뉴와 햄버거 메뉴의 고정·스크롤 동작은 무엇인가?
-39. 좌석도·평점·LP 인터랙션의 키보드 및 screen reader 조작은 어떻게 제공하는가?
+31. 저장 해제 후 과거 행동 신호를 얼마나 보존하는가?
+32. Account의 세부 정보와 계정 관리 항목은 무엇인가?
+33. Settings의 알림·개인화·접근성 항목은 무엇인가?
+
+#### Interaction과 접근성
+
+34. 좌석도·평점·LP interaction의 keyboard 및 screen reader 조작을 어떻게 제공하는가?
+35. reduced motion 환경에서 navigation과 LP motion을 어떻게 표현하는가?
 
 ## 13. 후속 문서와의 경계
 
@@ -637,12 +669,14 @@ flowchart TD
 | [PRODUCT_SPEC.md](PRODUCT_SPEC.md) | 기능 정책, 입력, 검증, 권한, 수용 기준 |
 | [RECOMMENDATION_SYSTEM.md](../recommendation/RECOMMENDATION_SYSTEM.md) | 공연·좌석 추천 입력, 랭킹, 후기 근거, 피드백 루프 |
 | [DATA_AND_ARCHITECTURE.md](../data/DATA_AND_ARCHITECTURE.md) | 데이터 수집·정규화, 엔티티, 저장 구조, 기술 아키텍처 |
-| [DESIGN_AND_INTERACTION.md](../design/DESIGN_AND_INTERACTION.md) | 시각 언어, 컴포넌트, 반응형 표현, 상태와 상호작용 |
+| [DESIGN_SYSTEM.md](../design/DESIGN_SYSTEM.md) | 시각 언어, token, 컴포넌트와 상태 표현 |
+| [RESPONSIVE.md](../design/RESPONSIVE.md) | breakpoint, navigation 위치, reflow와 상태 보존 |
+| [INTERACTION.md](../design/INTERACTION.md) | 제스처·전환, detail Back, LP playback과 접근성 interaction |
 | [DECISION_LOG_AND_OPEN_QUESTIONS.md](../decisions/DECISION_LOG_AND_OPEN_QUESTIONS.md) | 결정 이력, 선택 이유, 해결·보류 상태 |
 
 IA는 화면과 콘텐츠의 존재·계층·연결을 정의한다. 추천 가중치, API, DB 필드, 수집 방법, 오류 문구와 같은 구현 세부는 해당 후속 문서에서 다룬다.
 
-## 14. v0.3 변경 기록
+## 14. v0.4 변경 기록
 
 | 변경 | 반영 결과 |
 | --- | --- |
@@ -663,5 +697,12 @@ IA는 화면과 콘텐츠의 존재·계층·연결을 정의한다. 추천 가�
 | Learned Experience Signals | 명시적 취향과 분리된 내부 객체로 추가 |
 | YouTube 활용 | 폐기 범위에 추가 |
 | LP 중앙 상태 | App Home의 확정 디자인 방향으로 반영 |
+| For You 상태·정렬 | NEW 7일, unseen/seen 독립, 의도적 행동, 동일 피드 유지와 ranking 신호 경계 반영 |
+| 반응형 navigation | `<768 / 768–1199 / >=1200`, Mobile/Tablet bottom→top, Desktop left sidebar 반영 |
+| logo와 detail | App Home 이동, compact header·Back, list/feed 상태 복원 반영 |
+| 인증·재진입 | Google·Apple·email magic link, 명시적 로그인과 세션 재실행 분리 |
+| Concert Taste onboarding | Apple Music 우선·직접 입력 대안, 고정 category·free text, AI 확인 선택 처리 |
+| LP playback | 실제 재생 상태와 Apple Music 계열 source 정책 반영 |
+| 디자인 문서 | Design System, Responsive, Interaction으로 역할 분리 |
 
-이 문서는 기존 `IA_rsn.md` v0.2의 확정 구조를 계승하면서, 2026-09-14까지의 최신 Product Spec과 Decision Log를 반영한 현행 IA 기준이다.
+이 문서는 기존 `IA_rsn.md` v0.2의 확정 구조를 계승하면서 2026-09-15 Decision Checkpoint까지 반영한 현행 IA 기준이다.

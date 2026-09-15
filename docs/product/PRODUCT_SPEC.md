@@ -1,7 +1,7 @@
 # Resonance — Product Decisions & Feature Specification
 
-> 상태: Working baseline v1.0  
-> 기준일: 2026-09-14
+> 상태: Working baseline v1.1
+> 기준일: 2026-09-15
 
 ## 1. 제품 원칙
 
@@ -31,7 +31,7 @@
 - `Bookmarks`
 - `Settings`
 
-데스크톱 목업의 단독 아바타나 검색 아이콘보다 위 구조가 최신 결정이다. 전역 검색의 MVP 포함 여부는 아직 확정하지 않는다.
+데스크톱 목업의 단독 아바타나 검색 아이콘보다 위 구조가 최신 결정이다. 전역 통합 검색은 MVP에서 제외하고 Later 후보로 둔다. My Concert Taste의 preference 검색과 Reviews 내부 탐색처럼 기능 범위가 분명한 검색은 허용한다.
 
 ### 2.3 제거된 요소 — 확정
 
@@ -39,19 +39,31 @@
 - 별도 Alerts 메뉴·화면: 제거
 - 타인 후기와 커뮤니티 기능: 제거
 
+### 2.4 App Home과 전역 navigation — 확정
+
+- `resonance.` logo는 App Home으로 이동한다. unsaved changes가 있으면 입력 손실 보호 정책을 먼저 적용한다.
+- Mobile(`<768px`)과 Tablet(`768–1199px`)에서 primary navigation은 App Home 하단에 있고 모두 비선택이다.
+- destination 선택 시 Home 콘텐츠와 같은 navigation이 위로 이동해 content screen의 sticky top navigation이 된다. Home 복귀는 반대로 동작하며 LP가 다시 나타난다.
+- Desktop(`>=1200px`)은 left sidebar를 사용한다.
+- top navigation 메뉴 직접 선택은 slide 없이 즉시 전환하고, 콘텐츠 swipe는 인접 primary destination으로 gesture에 따라 이동한다.
+- Concert, Article, Review Detail은 global top navigation을 중첩하지 않고 compact header와 Back을 사용한다. 이전 list/feed scroll과 복원 가능한 UI state를 유지한다.
+
 ## 3. 인증과 초기 설정
 
 ### 3.1 인증
 
-`Sign In`과 `Get Started`는 유지한다. 구체적인 인증 방식과 제공자는 Open Question이다.
+`Sign In`과 `Get Started`는 유지한다. MVP 인증 방식은 Google, Sign in with Apple, email magic link다. Resonance 자체 비밀번호를 별도로 관리하지 않는 방향이며 provider 간 계정 연결과 계정 복구 세부는 Open Question이다.
+
+명시적 로그인 성공 직후에는 App Home으로 이동한다. 이미 로그인된 세션으로 PWA를 재실행하면 마지막 화면과 복원 가능한 상태를 되살리고, 유효하지 않거나 복원할 수 없으면 안전한 상위 화면으로 fallback한다. 보호된 deep link의 인증 후 복귀는 별도 Open Question이다.
 
 ### 3.2 Concert Taste 온보딩 — 확정
 
 - 신규 사용자는 `Concert Taste` 설정을 완료해야 한다.
 - Skip은 제공하지 않는다.
-- Preference 전체에서 최소 한 개의 입력이 있어야 완료할 수 있다.
-- Apple Music 연동은 취향 입력을 돕는 보조 수단일 수 있으며 필수 조건이 아니다.
-- 외부 음악 서비스 연결 없이도 직접 입력만으로 온보딩을 마칠 수 있어야 한다.
+- Apple Music 연결을 온보딩의 첫 선택지로 제시하고 그 아래 `취향 직접 입력하기`를 제공한다.
+- Apple Music 연결은 필수가 아니며 외부 음악 서비스 없이도 직접 입력으로 완료할 수 있다.
+- 직접 입력 경로에서는 Preference를 최소 한 개 선택·입력해야 다음 단계로 진행할 수 있다.
+- Apple Music 연결 시 imported taste 확인을 완료 조건으로 둘지와 어떤 데이터를 가져올지는 Open Question이다.
 
 ## 4. My Concert Taste
 
@@ -70,6 +82,8 @@
 
 예: `Piazzolla`, `Sibelius`, `Violin`, `Bandoneon`, `Chamber Music`.
 
+카테고리는 작곡가, 작품, 연주자·지휘자, 악기, 앙상블·공연 형식, 음악적 스타일·관심 키워드로 고정한다. canonical entity가 있으면 검색 결과에서 선택하고 DB에 없는 맥락적 관심사는 free-text keyword로 추가할 수 있다.
+
 ### 4.2 Experience Preferences — 확정 개념
 
 “공연장에서 어떻게 경험하고 싶은가?”를 자연어로 받는다.
@@ -80,9 +94,9 @@
 
 단순 체크박스나 고정 태그만으로 조건부 취향을 표현하게 하지 않는다. 자연어 원문은 보존한다.
 
-### 4.3 AI 해석 결과 — 제안, 미확정
+### 4.3 AI 해석 결과 — 확정 경계
 
-자연어를 추천 계산에 사용할 수 있도록 구조화하고, 시스템이 이해한 내용을 사용자가 확인·수정하는 UI가 권장된다. 그러나 해석 결과의 스키마와 확인 단계의 필수 여부는 아직 확정하지 않는다.
+자연어 원문은 그대로 보존한다. AI는 추천 계산을 위해 구조화된 해석을 생성할 수 있지만 결과 확인을 onboarding 필수 단계로 두지 않는다. `My Concert Taste`에서 “Resonance가 이렇게 이해했어요”와 같은 형태로 선택적으로 확인·수정할 수 있다. 해석 schema와 정확한 편집 UI는 아직 미확정이다.
 
 ### 4.4 Learned Experience Signals — 확정 개념
 
@@ -100,6 +114,10 @@ MVP에서는 학습된 프로필을 별도 설정 화면으로 노출하지 않�
 - 관심 키워드와 Concert Taste 기반의 개인화 공연 피드다.
 - 알림된 공연이 앱 안에서 이어지는 도착 영역이다.
 - 공연 카드에서 공연 상세, 좌석 추천, 외부 예매, 후기 작성으로 이동할 수 있다.
+- `NEW`는 공연 최초 수집 후 7일간 유지하며 사용자별 unseen/seen과 독립적이고 공연 정보 수정으로 기간을 다시 시작하지 않는다.
+- viewport 노출만으로 seen 처리하지 않고 상세 열기·좌석 추천 확인 등 의도적 행동에서 seen 처리한다.
+- seen 공연도 숨기거나 강등하지 않고 같은 피드 위치에 둔다. seen/unseen은 ranking 신호가 아니다.
+- 기본 ranking은 Concert Taste 적합도를 주축으로 하고 공연일 임박도와 신규성을 보조 신호로 사용한다. 정확한 가중치는 Open Question이다.
 
 ### 5.2 알림 도착점 — 최신 확정
 
@@ -124,6 +142,8 @@ MVP에서는 학습된 프로필을 별도 설정 화면으로 노출하지 않�
 - `Reviews` — 해당 공연과 연결된 내 후기만
 
 Overview는 공연 일시·장소·연주자·프로그램 요약, 좌석 추천 요약, 추천 이유, 외부 예매 CTA를 제공한다.
+
+상세 화면은 compact header와 Back을 사용한다. global primary navigation을 중첩하지 않으며, Back 시 이전 list/feed scroll과 가능한 UI state를 복원한다.
 
 ## 7. Bookmarks — 확정
 
@@ -193,16 +213,24 @@ Overview는 공연 일시·장소·연주자·프로그램 요약, 좌석 추천
 
 YouTube 영상 임베딩과 YouTube/YouTube Music 데이터를 Resonance의 추천 입력으로 사용하는 구상은 폐기한다. 같은 작품의 서로 다른 연주·해석에 대한 사용자 선호를 이해한다는 목적은 유지하되 Resonance의 직접 입력과 앱 내 행동 데이터로 해결한다.
 
-### 10.2 Apple Music — 제한적 후보
+### 10.2 LP playback과 Apple Music — 확정 제품 정책
 
-Apple Music은 Concert Taste 입력을 돕는 선택적 보조 수단 후보다. 앱 내 실제 재생, MusicKit 적용 범위, 외부 링크만 제공할지 여부는 Open Question이다.
+App Home LP는 단순한 시각 prototype이 아니라 실제 playback UI다. stylus를 LP play zone으로 이동하면 Play, LP tap/click은 Pause/Resume, stylus를 resting position으로 되돌리면 Stop한다. track 종료 시 자동 Stop하고 playback position, stylus와 노란 `resonance` label을 초기 상태로 복원한다.
+
+재생 소스는 Apple Music / Apple Music Classical 계열로 한정하며 YouTube / YouTube Music 및 기타 음원 제공자는 사용하지 않는다. 실제 PWA 통합은 MusicKit / Apple Music API의 지원 범위, 권한, catalog mapping과 Apple Music Classical 데이터 경계를 engineering 단계에서 검증한다. 제품 차원에서 실제 재생 여부와 제공자 범위는 더 이상 Open Question이 아니다.
+
+### 10.3 Apple identity와 Music authorization — 확정 경계
+
+Sign in with Apple은 Resonance 계정 인증에 사용한다. 이것만으로 Apple Music 개인 데이터나 재생 권한이 생긴다고 가정하지 않는다. Apple Music 연결 단계에서 MusicKit의 별도 사용자 authorization과 consent가 필요하다.
+
+Concert Taste seed에 사용할 Apple Music 데이터, imported/inferred taste confirm 여부와 classical/non-classical 분류 기준은 Open Question이다.
 
 ## 11. Later 범위
 
+- 전역 통합 검색
 - Learned Experience Signals를 설명하는 Taste Insight
 - 후기·아티클·프로그램북·공연 상세 이미지를 조합한 개인 매거진
 - 개인 후기의 선택적 공유
 - 다수 사용자 후기 기반 좌석 점수와 신뢰도 모델
 - 실시간 예매 재고와의 공식 연동
 - 뮤지컬 좌석 평가로의 확장
-
