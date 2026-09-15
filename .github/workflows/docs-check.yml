@@ -1,0 +1,24 @@
+name: Documentation checks
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install documentation tooling
+        run: python -m pip install -r scripts/requirements-docs.txt
+      - name: Check local documentation and asset links
+        run: python scripts/check_docs.py
+      - name: Test checker regressions
+        run: python -m unittest discover -s scripts/tests -v

@@ -1,0 +1,338 @@
+.shell { min-height: 100vh; display: grid; grid-template-columns: 218px minmax(0, 1fr); }
+.sidebar { padding: 31px 25px 24px; border-right: 1px solid var(--line); display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; }
+.logo { display: inline-flex; align-items: baseline; font-size: 30px; font-weight: 750; color: var(--blue); line-height: 1.1; }
+.logoDot { width: 6px; height: 6px; background: var(--blue); border-radius: 50%; margin-left: 3px; }
+.navigation { display: flex; flex-direction: column; gap: 8px; margin: 79px -25px 0; }
+.navigation a { display: flex; align-items: center; gap: 12px; min-height: 49px; padding: 8px 27px; border-left: 3px solid transparent; font-weight: 500; }
+.navigation a:hover { background: var(--soft); }
+.navigation a[aria-current] { color: var(--blue); border-color: var(--blue); font-weight: 700; }
+.outsideMark { font-size: 9px; color: #6c7067; border: 1px solid var(--line); border-radius: 3px; padding: 0 4px; }
+.sidebarBottom { margin-top: auto; font-size: 11px; }
+.sidebarBottom p { margin: 20px 0 13px; line-height: 1.9; }
+.sidebarBottom > span:last-of-type { color: var(--muted); }
+.shortLine { display: block; width: 29px; height: 2px; background: var(--ink); }
+.edition { border-top: 1px solid var(--line); margin-top: 32px; padding-top: 20px; display: flex; justify-content: space-between; color: var(--muted); font-size: 10px; }
+.body { min-width: 0; display: flex; flex-direction: column; }
+.topbar { display: flex; align-items: center; justify-content: space-between; min-height: 88px; padding: 0 48px; border-bottom: 1px solid var(--line); gap: 16px; }
+.topbarLabel { color: var(--muted); font-size: 10px; }
+.topbarRight { display: flex; align-items: center; gap: 18px; }
+.demoPill { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; }
+.demoPill > span { background: var(--yellow); width: 7px; height: 7px; border: 1px solid #a79c12; border-radius: 50%; }
+.userStatus { font-size: 11px; color: var(--muted); }
+.iconButton { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: 42px; height: 42px; padding: 0; border: 1px solid transparent; border-radius: 4px; background: transparent; }
+.iconButton:hover { background: var(--soft); border-color: var(--line); }
+.main { width: 100%; max-width: 1420px; padding: 28px 48px 44px; margin: 0 auto; flex: 1; }
+.footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 24px; border-top: 1px solid var(--line); padding: 19px 48px; color: var(--muted); font-size: 10px; }
+.footer > span:first-child { display: inline-flex; align-items: center; gap: 7px; }
+.skipLink { position: fixed; z-index: 10; padding: 12px; background: var(--yellow); top: -100px; left: 20px; }
+.skipLink:focus { top: 16px; }
+.breadcrumb { display: flex; justify-content: space-between; color: var(--muted); font-size: 10px; gap: 20px; }
+.homeScene { height: 530px; position: relative; isolation: isolate; }
+.homeImage { object-fit: contain; padding-left: 175px; padding-top: 8px; padding-bottom: 20px; z-index: -1; }
+.homeHeading { position: absolute; top: 50px; left: 0; }
+.eyebrow { font-size: 10px; font-weight: 600; color: var(--muted); display: block; }
+.homeHeading h1 { margin-top: 16px; font-size: 58px; line-height: 1.04; font-weight: 650; }
+.homeCaption { position: absolute; left: 8px; bottom: 60px; font-size: 17px; line-height: 1.65; }
+.homeCaption p { margin-top: 20px; }
+.recordLabel { position: absolute; bottom: 15px; right: 0; font-size: 9px; color: var(--muted); }
+.homeCta { border-top: 1px solid var(--line); padding: 29px 0 5px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.homeCta p { margin-top: 5px; font-size: 17px; }
+.primaryButton, .secondaryButton { display: inline-flex; align-items: center; justify-content: center; gap: 12px; padding: 13px 20px; min-height: 46px; border: 1px solid var(--blue); background: var(--blue); color: white; font-size: 13px; font-weight: 600; border-radius: 4px; text-align: center; }
+.primaryButton:hover { background: #0b2fbd; border-color: #0b2fbd; }
+.secondaryButton { color: var(--ink); background: white; border-color: var(--line); }
+.secondaryButton:hover { background: var(--soft); border-color: var(--ink); }
+.textButton { display: inline-flex; align-items: center; gap: 8px; padding: 8px 0; border: 0; background: none; color: var(--blue); font-size: 13px; font-weight: 600; text-align: left; }
+.textButton:hover { text-decoration: underline; }
+.textButton small { color: var(--muted); font-size: 10px; font-weight: 400; }
+.feedIntro { display: flex; justify-content: space-between; align-items: end; gap: 20px; padding: 26px 0 42px; }
+.feedIntro h1 { font-size: 32px; line-height: 1.4; margin-top: 10px; font-weight: 650; }
+.feedIntro p { font-size: 14px; color: var(--muted); margin-top: 9px; }
+.count { font-size: 42px; line-height: 1.1; color: var(--blue); display: flex; flex-direction: column; align-items: flex-end; }
+.count small { color: var(--muted); font-size: 9px; margin-top: 7px; }
+.feedCaption { display: flex; justify-content: space-between; padding-bottom: 13px; border-bottom: 1px solid var(--ink); font-size: 10px; color: var(--muted); gap: 12px; }
+.concertRow { display: grid; grid-template-columns: 57px 133px minmax(0, 1fr) 42px; align-items: start; gap: 25px; padding: 29px 0; border-bottom: 1px solid var(--line); }
+.dateBlock { display: flex; flex-direction: column; line-height: 1.2; padding-top: 3px; }
+.dateBlock > span { font-size: 10px; color: var(--muted); }
+.dateBlock strong { font-size: 38px; font-weight: 500; margin: 4px 0; }
+.dateBlock small { font-size: 10px; color: var(--muted); }
+.poster { aspect-ratio: 4 / 5; background: var(--yellow); display: flex; flex-direction: column; position: relative; padding: 25px; overflow: hidden; min-width: 0; }
+.posterEdition { font-size: 9px; line-height: 1.45; }
+.posterDisc { width: 76%; aspect-ratio: 1; margin: 18px auto 13px; display: flex; align-items: center; justify-content: center; }
+.posterDisc svg { width: 100%; height: 100%; }
+.poster strong { font-size: 36px; line-height: 1.08; font-weight: 650; max-width: 240px; }
+.posterBottom { display: flex; justify-content: space-between; font-size: 8px; border-top: 1px solid currentColor; padding-top: 10px; margin-top: auto; gap: 12px; }
+.posterCompact { padding: 12px; }
+.posterCompact .posterEdition { font-size: 6px; }
+.posterCompact .posterDisc { margin: 9px auto 6px; width: 53%; }
+.posterCompact strong { font-size: 16px; }
+.posterCompact .posterBottom { font-size: 5px; margin-top: 9px; padding-top: 5px; }
+.blue { background: #dfe7ff; color: #123bb8; }
+.ink { background: #252b27; color: #f1f5e9; }
+.yellow { background: var(--yellow); }
+.concertInfo h2 { font-size: 22px; line-height: 1.3; margin-top: 5px; font-weight: 650; }
+.concertInfo h2 a:hover { color: var(--blue); }
+.english { font-size: 12px; color: var(--muted); margin-top: 3px; }
+.venue { font-size: 12px; color: var(--muted); margin-top: 10px; }
+.venue span { margin: 0 6px; }
+.seatTeaser { display: flex; justify-content: space-between; align-items: center; color: var(--blue); background: #f3f6ff; border-left: 2px solid #ced9ff; padding: 12px 14px; margin-top: 17px; gap: 12px; }
+.seatTeaser:hover { background: #e8eeff; }
+.seatTeaser > span { display: flex; flex-direction: column; }
+.seatTeaser small { font-size: 9px; }
+.seatTeaser strong { font-size: 14px; font-weight: 600; }
+.seatTeaser span span { font-size: 10px; color: #50649d; }
+.concertActions { display: flex; flex-direction: column; justify-content: space-between; align-self: stretch; gap: 10px; }
+.roundLink { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border: 1px solid var(--line); border-radius: 50%; }
+.roundLink:hover { color: var(--blue); border-color: var(--blue); }
+.feedFootnote { display: flex; align-items: flex-start; gap: 8px; font-size: 11px; color: var(--muted); margin-top: 24px; }
+.detailTop { display: flex; align-items: center; gap: 16px; margin-top: -7px; }
+.detailTop > span { margin-left: auto; }
+.backLink { display: inline-flex; gap: 7px; align-items: center; font-size: 12px; color: var(--muted); }
+.backLink:hover { color: var(--blue); }
+.smallLabel { font-size: 9px; font-weight: 600; color: var(--muted); }
+.concertHeader { padding: 27px 0 24px; }
+.concertHeader > .eyebrow { display: flex; align-items: center; gap: 15px; }
+.sampleTag { display: inline-block; padding: 2px 7px; background: #f4edb3; color: #5d5317; font-size: 10px; font-weight: 500; border-radius: 2px; }
+.concertHeader h1 { font-size: 38px; line-height: 1.25; margin: 10px 0 5px; font-weight: 650; }
+.concertHeader > p { font-size: 15px; color: var(--muted); }
+.compactHeader { padding: 15px 0; }
+.compactHeader h1 { font-size: 30px; margin-bottom: 0; }
+.compactHeader > p { display: none; }
+.compactHeader .metadata { margin-top: 12px; }
+.metadata { display: flex; gap: 25px; margin-top: 21px; flex-wrap: wrap; color: var(--muted); font-size: 12px; }
+.metadata > span { display: inline-flex; align-items: center; gap: 7px; }
+.tabs { display: flex; border-bottom: 1px solid var(--line); gap: 27px; }
+.tabs > a, .tabs > button { padding: 14px 0; min-height: 49px; position: relative; border: none; border-bottom: 2px solid transparent; background: none; color: var(--muted); font-size: 12px; display: inline-flex; align-items: center; gap: 5px; }
+.tabs > [aria-current], .tabs > [aria-selected=true] { color: var(--blue); border-bottom-color: var(--blue); font-weight: 700; }
+.tabs > button small { font-size: 8px; }
+.tabs a:hover, .tabs button:hover { color: var(--blue); }
+.overview { display: grid; grid-template-columns: minmax(0, 1fr) minmax(240px, 36%); gap: 55px; padding-top: 36px; align-items: start; }
+.overviewCopy h2 { font-size: 29px; line-height: 1.45; margin: 12px 0; font-weight: 600; }
+.overviewCopy > p:not(.eyebrow):not(.formNote) { color: var(--muted); font-size: 14px; line-height: 1.85; max-width: 450px; }
+.facts { margin: 26px 0; font-size: 12px; }
+.facts > div { display: grid; grid-template-columns: 78px minmax(0, 1fr); padding: 7px 0; }
+.facts dt { color: var(--muted); }
+.facts dd { margin: 0; }
+.overviewRecommend { padding: 22px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.overviewRecommend h3 { font-size: 20px; color: var(--blue); margin: 6px 0; }
+.overviewRecommend p { font-size: 12px; color: var(--muted); }
+.overviewRecommend > a { margin-top: 20px; }
+.overviewActions { display: flex; gap: 22px; padding-top: 15px; }
+.sectionHeading { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 28px 0 20px; }
+.sectionHeading h2 { font-size: 25px; line-height: 1.4; font-weight: 600; margin-top: 5px; }
+.sectionHeading > button { flex-shrink: 0; }
+.needSummary { display: flex; align-items: center; gap: 14px; font-size: 12px; margin-bottom: 24px; background: var(--soft); padding: 12px 16px; border-left: 2px solid var(--yellow); min-height: 49px; }
+.needSummary .iconButton { margin-left: auto; width: 26px; height: 26px; }
+.needSummary p { overflow-wrap: anywhere; }
+.needSummary .smallLabel { flex-shrink: 0; }
+.seatLayout { display: grid; grid-template-columns: 285px minmax(0, 1fr); gap: 32px; align-items: start; }
+.listCaption { display: flex; justify-content: space-between; margin-bottom: 12px; color: var(--muted); font-size: 10px; }
+.options { min-width: 0; }
+.option { display: flex; flex-direction: column; width: 100%; border: 1px solid var(--line); background: white; border-radius: 5px; padding: 17px 20px 20px; text-align: left; margin-bottom: 12px; min-height: 169px; }
+.option:hover { border-color: #778dec; }
+.optionActive { border: 1px solid var(--blue); background: #f6f8ff; box-shadow: inset 3px 0 0 var(--blue); }
+.optionTop { display: flex; justify-content: space-between; width: 100%; font-size: 10px; color: var(--muted); margin-bottom: 12px; }
+.selectionIndicator { display: flex; align-items: center; justify-content: center; width: 17px; height: 17px; border: 1px solid #bbc0b3; border-radius: 50%; }
+.optionActive .selectionIndicator { background: var(--blue); border-color: var(--blue); color: white; }
+.option > strong { font-size: 21px; font-weight: 600; line-height: 1.4; }
+.optionSeat { font-size: 13px; color: var(--blue); margin-top: 7px; }
+.optionSummary { font-size: 11px; color: var(--muted); margin-top: 6px; }
+.evidenceNote { display: flex; align-items: flex-start; gap: 8px; padding: 9px 0; color: var(--muted); font-size: 10px; line-height: 1.85; }
+.mapColumn { min-width: 0; }
+.mapTool { border: 1px solid var(--line); border-radius: 5px; overflow: hidden; }
+.mapHeader { display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; gap: 12px; }
+.mapHeader > span { display: flex; flex-direction: column; }
+.mapHeader strong { font-size: 12px; font-weight: 600; }
+.mapHeader small { font-size: 10px; color: var(--muted); margin-top: 1px; }
+.zoom { display: flex; align-items: center; gap: 6px; font-size: 9px; color: var(--muted); }
+.zoom select { border: 1px solid var(--line); padding: 5px; font-size: 10px; background: white; border-radius: 3px; color: var(--ink); }
+.mapViewport { --map-height: 340px; overflow: auto; background: #fcfcfa; max-height: 390px; }
+.seatMap { display: block; min-width: 100%; max-width: none; }
+.stageText { font-size: 11px; fill: #545a4c; }
+.blockText { font-size: 11px; fill: #343a2f; }
+.rowText { font-size: 8px; fill: #69735e; }
+.mapLegend { border-top: 1px solid var(--line); padding: 12px 20px; font-size: 9px; color: var(--muted); display: flex; justify-content: space-between; gap: 12px; }
+.mapLegend span { display: flex; align-items: center; gap: 7px; }
+.mapLegend i { width: 8px; height: 8px; background: var(--blue); border: 1px solid var(--blue); box-shadow: inset 0 0 0 2px white; }
+.reason { padding: 25px 0 0; }
+.reasonLabel { display: flex; align-items: center; gap: 12px; font-size: 10px; color: var(--blue); }
+.reason h3 { font-size: 22px; margin: 8px 0 12px; font-weight: 600; }
+.reason > p { font-size: 12px; line-height: 1.9; }
+.reason .tradeoff { color: var(--muted); margin-top: 10px; font-size: 11px; }
+.bookingRow { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 22px; padding-top: 10px; border-top: 1px solid var(--line); }
+.bookingRow > span { font-size: 10px; color: var(--muted); }
+.inlineNotice { background: #fffbe4; padding: 10px; border-left: 2px solid #d3b713; margin-top: 10px; }
+.dialog { width: min(540px, calc(100% - 32px)); max-height: calc(100dvh - 48px); border: 1px solid #b6b9af; border-radius: 7px; padding: 25px 28px 28px; color: var(--ink); background: white; box-shadow: 0 18px 90px #0003; }
+.dialog::backdrop { background: #111a; }
+.dialogHeading { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 12px; }
+.dialogHeading h2 { font-size: 21px; line-height: 1.4; font-weight: 600; }
+.dialogHeading .iconButton { margin-right: -9px; }
+.muted { color: var(--muted); font-size: 13px; }
+.utilityLinks { margin-top: 24px; }
+.utilityLinks a { display: flex; align-items: center; gap: 14px; padding: 18px 3px; border-top: 1px solid var(--line); }
+.utilityLinks a:hover { color: var(--blue); }
+.utilityLinks a > span { flex: 1; font-size: 16px; }
+.utilityLinks small { display: block; color: var(--muted); font-size: 10px; }
+.dialog textarea { width: 100%; resize: vertical; min-height: 106px; border: 1px solid #adb2a4; border-radius: 4px; padding: 12px; font-size: 14px; }
+.fieldLabel { display: block; margin: 22px 0 6px; font-size: 12px; font-weight: 600; }
+.tasteSnapshot { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: 20px 0 14px; padding: 16px 0; }
+.tasteSnapshot p { font-size: 13px; margin-top: 5px; }
+.tasteSnapshot small { font-size: 10px; color: var(--muted); }
+.formNote { font-size: 10px; color: var(--muted); line-height: 1.8; }
+.dialogActions { display: flex; align-items: center; justify-content: flex-end; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
+.scopeContent h3 { margin: 15px 0 9px; font-size: 19px; }
+.scopeContent p { font-size: 13px; color: var(--muted); }
+.scopeContent > button { margin-top: 24px; }
+.utilityPage { padding: 12px 0; max-width: 770px; }
+.utilityPage > .eyebrow { margin-top: 55px; }
+.utilityPage h1 { font-size: 36px; margin: 12px 0 28px; line-height: 1.2; }
+.readOnlyNotice { display: inline-flex; gap: 9px; align-items: center; padding: 10px 15px; background: var(--soft); font-size: 12px; }
+.profile { margin: 30px 0; }
+.profile > div { padding: 22px 0; border-top: 1px solid var(--line); }
+.profile dt { font-size: 10px; color: var(--muted); }
+.profile dd { margin: 5px 0 0; font-size: 18px; }
+.outsidePanel { padding: 55px 0; display: flex; align-items: flex-start; flex-direction: column; gap: 14px; }
+.outsidePanel h2 { font-size: 23px; }
+.outsidePanel p { font-size: 13px; color: var(--muted); }
+.statePanel { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 80px 20px; min-height: 350px; gap: 15px; }
+.statePanel h1 { font-size: 25px; line-height: 1.4; }
+.statePanel p { font-size: 13px; color: var(--muted); }
+.statePanel .dialogActions { justify-content: center; }
+.spinning { animation: spin 1.6s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.scenarios { margin-top: 40px; border-top: 1px solid var(--line); padding-top: 14px; color: var(--muted); font-size: 10px; }
+.scenarios summary { cursor: pointer; display: flex; align-items: center; gap: 8px; width: fit-content; padding: 7px 0; }
+.scenarios[open] summary svg { transform: rotate(90deg); }
+.scenarios label { display: inline-flex; align-items: center; gap: 15px; margin: 10px 0; }
+.scenarios select { border: 1px solid var(--line); padding: 6px; font-size: 12px; background: white; color: var(--ink); }
+@media (min-width: 1600px) { .homeScene { height: 610px; } }
+@media (max-width: 1199px) {
+  .shell { grid-template-columns: 180px minmax(0, 1fr); }
+  .sidebar { padding-right: 18px; padding-left: 18px; }
+  .logo { font-size: 26px; }
+  .navigation { margin-left: -18px; margin-right: -18px; }
+  .navigation a { padding-left: 20px; }
+  .main { padding-left: 28px; padding-right: 28px; }
+  .topbar, .footer { padding-left: 28px; padding-right: 28px; }
+  .seatLayout { grid-template-columns: 235px minmax(0, 1fr); gap: 22px; }
+  .option { padding-left: 16px; padding-right: 16px; }
+  .concertRow { grid-template-columns: 44px 104px minmax(0, 1fr) 36px; gap: 15px; }
+  .concertInfo h2 { font-size: 20px; }
+  .overview { gap: 26px; grid-template-columns: minmax(0, 1fr) 220px; }
+  .poster strong { font-size: 30px; }
+  .posterCompact strong { font-size: 12px; }
+  .homeHeading h1 { font-size: 48px; }
+  .homeImage { padding-left: 90px; padding-top: 70px; }
+}
+@media (min-width: 800px) and (max-width: 1023px) {
+  .seatLayout { grid-template-columns: minmax(0, 1fr); }
+  .options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .listCaption, .evidenceNote { grid-column: 1 / -1; margin: 0; }
+  .option { margin: 0; }
+  .sectionHeading { align-items: flex-start; }
+  .sectionHeading h2 { font-size: 21px; }
+  .sectionHeading > button { padding: 10px; font-size: 11px; }
+  .concertRow { grid-template-columns: 42px minmax(0, 1fr) 36px; gap: 15px; }
+  .posterLink { display: none; }
+  .overview { grid-template-columns: minmax(0, 1fr); }
+  .overview > .poster { max-width: 330px; width: 100%; }
+  .tabs { gap: 18px; }
+  .tabs > button small { font-size: 8px; }
+  .homeHeading h1 { font-size: 42px; }
+  .homeCaption { bottom: 35px; }
+  .homeCta { align-items: flex-start; flex-direction: column; }
+}
+@media (max-width: 799px) {
+  .shell { display: block; }
+  .sidebar { height: auto; padding: 22px 20px 0; border-right: 0; border-bottom: 1px solid var(--line); position: static; }
+  .logo { font-size: 30px; width: fit-content; }
+  .navigation { flex-direction: row; margin: 20px 0 0; gap: 26px; }
+  .navigation a { padding: 10px 0 13px; min-height: 44px; gap: 5px; border-left: 0; border-bottom: 2px solid transparent; font-size: 14px; }
+  .outsideMark { font-size: 8px; border: 0; padding: 0; }
+  .sidebarBottom { display: none; }
+  .topbar { min-height: 45px; padding: 0 20px; border: 0; }
+  .topbarLabel { font-size: 8px; }
+  .topbarRight { gap: 9px; }
+  .topbarRight > button { position: absolute; top: 17px; right: 14px; }
+  .userStatus { font-size: 9px; }
+  .demoPill { font-size: 9px; }
+  .main { padding: 15px 20px 30px; }
+  .footer { padding: 17px 20px; font-size: 9px; }
+  .breadcrumb { font-size: 8px; }
+  .homeScene { height: 465px; }
+  .homeHeading { top: 22px; }
+  .homeHeading h1 { font-size: 38px; line-height: 1.06; margin-top: 9px; }
+  .homeHeading .eyebrow { font-size: 8px; }
+  .homeImage { padding: 0; top: 123px !important; height: 288px !important; }
+  .homeCaption { bottom: 1px; left: 0; font-size: 13px; }
+  .homeCaption .shortLine { display: none; }
+  .homeCaption p { margin-top: 0; }
+  .recordLabel { bottom: 8px; font-size: 7px; }
+  .homeCta { margin-top: 20px; padding-top: 19px; align-items: flex-start; flex-direction: column; gap: 15px; }
+  .homeCta p { font-size: 14px; }
+  .homeCta .primaryButton { width: 100%; justify-content: space-between; }
+  .feedIntro { padding: 18px 0 30px; gap: 12px; }
+  .feedIntro h1 { font-size: 25px; margin-top: 8px; }
+  .feedIntro p { font-size: 12px; }
+  .count { font-size: 30px; }
+  .count small { font-size: 7px; }
+  .feedCaption { font-size: 8px; }
+  .concertRow { grid-template-columns: 38px minmax(0, 1fr) 30px; gap: 13px; padding: 25px 0; }
+  .posterLink { display: none; }
+  .dateBlock strong { font-size: 31px; }
+  .dateBlock > span, .dateBlock small { font-size: 9px; }
+  .concertInfo .eyebrow { font-size: 8px; }
+  .concertInfo h2 { font-size: 19px; margin-top: 5px; }
+  .english { font-size: 10px; }
+  .venue { font-size: 10px; margin-top: 8px; }
+  .seatTeaser { margin-top: 14px; padding: 10px; }
+  .seatTeaser strong { font-size: 12px; }
+  .seatTeaser span span { font-size: 9px; }
+  .seatTeaser small { font-size: 8px; }
+  .concertActions .iconButton { width: 32px; }
+  .roundLink { width: 30px; height: 30px; }
+  .feedFootnote { font-size: 10px; line-height: 1.8; }
+  .detailTop { gap: 10px; }
+  .detailTop .smallLabel { font-size: 8px; }
+  .concertHeader { padding: 20px 0; }
+  .concertHeader h1 { font-size: 29px; }
+  .concertHeader > p { font-size: 12px; }
+  .metadata { gap: 10px; font-size: 10px; margin-top: 15px; }
+  .metadata > span { gap: 5px; }
+  .metadata svg { width: 14px; }
+  .tabs { gap: 0; justify-content: space-between; }
+  .tabs > a, .tabs > button { font-size: 11px; flex-direction: column; gap: 0; padding: 10px 2px; }
+  .tabs > button small { font-size: 7px; line-height: 1.2; }
+  .overview { grid-template-columns: minmax(0, 1fr); gap: 35px; padding-top: 26px; }
+  .overviewCopy h2 { font-size: 26px; }
+  .overview > .poster { width: 100%; max-width: 360px; }
+  .overviewCopy > p:not(.eyebrow):not(.formNote) { font-size: 13px; }
+  .sectionHeading { padding: 24px 0 17px; gap: 16px; flex-wrap: wrap; }
+  .sectionHeading h2 { font-size: 23px; }
+  .sectionHeading > button { padding: 8px 12px; min-height: 39px; font-size: 11px; }
+  .needSummary { padding: 11px 12px; gap: 7px 12px; flex-wrap: wrap; font-size: 11px; margin-bottom: 22px; }
+  .needSummary .smallLabel { font-size: 8px; }
+  .seatLayout { grid-template-columns: minmax(0, 1fr); gap: 22px; }
+  .options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .listCaption, .evidenceNote { grid-column: 1 / -1; margin: 0; }
+  .option { margin: 0; min-height: 170px; padding: 13px 12px; }
+  .option > strong { font-size: 18px; }
+  .optionSeat { font-size: 11px; margin-top: 6px; }
+  .optionSummary { font-size: 10px; }
+  .evidenceNote { font-size: 10px; padding: 5px 0 0; }
+  .evidenceNote br { display: none; }
+  .mapHeader { padding: 12px 14px; }
+  .mapViewport { --map-height: 250px; max-height: 320px; }
+  .mapHeader strong { font-size: 11px; }
+  .mapHeader small { font-size: 9px; }
+  .mapLegend { padding: 11px 14px; }
+  .reason h3 { font-size: 21px; }
+  .reason > p { font-size: 12px; }
+  .dialog { padding: 17px 20px 22px; }
+  .dialogHeading h2 { font-size: 19px; }
+  .dialog .primaryButton, .dialog .secondaryButton { padding: 10px 13px; font-size: 12px; }
+  .utilityPage h1 { font-size: 30px; }
+  .profile dd { font-size: 16px; overflow-wrap: anywhere; }
+  .statePanel { padding: 55px 0; }
+  .statePanel h1 { font-size: 23px; }
+}
+@media (max-width: 359px) { .navigation { gap: 18px; } .main { padding-left: 16px; padding-right: 16px; } .feedIntro h1 { font-size: 22px; } .count { display: none; } .options { grid-template-columns: minmax(0, 1fr); } .homeHeading h1 { font-size: 34px; } }

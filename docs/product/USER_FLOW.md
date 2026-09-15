@@ -2,8 +2,8 @@
 
 > 문서 상태: Working Baseline v0.2  
 > 기준일: 2026-09-15  
-> 기준 문서: `IA.md` v0.3  
-> 대체 문서: `user-flow.md` Draft v0.1, `05_USER_FLOW_ADDENDUM.md` v1.0  
+> 기준 문서: [IA.md](IA.md) v0.3\
+> 대체 문서: `user-flow.md` Draft v0.1, `05_USER_FLOW_ADDENDUM.md` v1.0 (저장소에 없는 역사적 원본명)\
 > 제품: 클래식 공연 추천·좌석 추천·아티클·개인 후기 아카이빙 반응형 웹앱
 
 ## 1. 문서 목적
@@ -12,12 +12,12 @@
 
 다음 내용은 별도 문서에서 구체화한다.
 
-- 화면과 콘텐츠의 존재·계층: `IA.md`
-- 기능 정책과 입력 검증·권한·수용 기준: `PRODUCT_SPEC.md`
-- 추천 입력·랭킹·근거·피드백: `RECOMMENDATION_SYSTEM.md`
-- 데이터 수집·저장·기술 구조: `DATA_AND_ARCHITECTURE.md`
-- 내비게이션·반응형·상태의 시각 표현: `DESIGN_AND_INTERACTION.md`
-- 결정 이력과 해결·보류 상태: `DECISION_LOG_AND_OPEN_QUESTIONS.md`
+- 화면과 콘텐츠의 존재·계층: [IA.md](IA.md)
+- 기능 정책과 입력 검증·권한·수용 기준: [PRODUCT_SPEC.md](PRODUCT_SPEC.md)
+- 추천 입력·랭킹·근거·피드백: [RECOMMENDATION_SYSTEM.md](../recommendation/RECOMMENDATION_SYSTEM.md)
+- 데이터 수집·저장·기술 구조: [DATA_AND_ARCHITECTURE.md](../data/DATA_AND_ARCHITECTURE.md)
+- 내비게이션·반응형·상태의 시각 표현: [DESIGN_AND_INTERACTION.md](../design/DESIGN_AND_INTERACTION.md)
+- 결정 이력과 해결·보류 상태: [DECISION_LOG_AND_OPEN_QUESTIONS.md](../decisions/DECISION_LOG_AND_OPEN_QUESTIONS.md)
 
 ## 2. 흐름 작성 원칙
 
@@ -869,7 +869,7 @@ stateDiagram-v2
 1. Splash 이후 상태별 정확한 도착 화면은 어디인가?
 2. 인증 방식과 신규 사용자 가입 단계는 무엇인가?
 3. 보호된 deep link의 인증 후 원래 화면 복귀를 지원하는가?
-4. 기존 사용자 재로그인 시 App Home과 마지막 화면 중 어디로 이동하는가?
+4. 기존 사용자 재로그인 시 App Home과 마지막 화면 중 어디로 이동하는가? UF-01·D-003과의 관계는 [결정 로그](../decisions/DECISION_LOG_AND_OPEN_QUESTIONS.md)의 DR-002 참조.
 5. Concert Taste 수정 후에도 최소 한 개 Preference 규칙을 유지하는가?
 6. Experience Preference의 AI 해석 확인 단계를 필수로 두는가?
 7. Apple Music 입력 보조를 MVP에 포함하는가?
@@ -914,10 +914,10 @@ stateDiagram-v2
 31. 좌석 직접 입력·좌석도 선택·추천 불러오기 중 어떤 방식을 MVP에 포함하는가?
 32. `Attendance 1 : Review 1` 모델을 채택하는가?
 33. Review의 최소 필수 필드와 검증 규칙은 무엇인가?
-34. 임시 저장과 작성 취소 확인을 제공하는가?
+34. 임시 저장과 작성 취소 확인을 제공하는가? 공통 Unsaved changes 요구와의 관계는 [결정 로그](../decisions/DECISION_LOG_AND_OPEN_QUESTIONS.md)의 DR-004 참조.
 35. 후기 작성 가능 시점과 실제 관람 확인 절차가 필요한가?
 36. 후기 삭제를 복구할 수 있는가?
-37. 저장·수정·삭제 완료 후 정확한 도착 화면은 어디인가?
+37. 저장·수정·삭제 완료 후 정확한 도착 화면은 어디인가? UF-12·UF-13 본문과의 관계는 [결정 로그](../decisions/DECISION_LOG_AND_OPEN_QUESTIONS.md)의 DR-003 참조.
 38. 후기 목록의 검색·정렬·필터는 무엇인가?
 
 ### 반응형·접근성
@@ -971,4 +971,4 @@ stateDiagram-v2
 | LP 상태 방향 | 조건부 UF-17 추가 |
 | YouTube 활용 폐기 | 제외 흐름에 반영 |
 
-이 문서는 기존 `user-flow.md` v0.1의 확정 흐름과 `05_USER_FLOW_ADDENDUM.md`의 최신 결정을 `IA.md` v0.3 기준으로 통합한 현행 User Flow다.
+이 문서는 기존 `user-flow.md` v0.1의 확정 흐름과 `05_USER_FLOW_ADDENDUM.md`의 최신 결정을 [IA.md](IA.md) v0.3 기준으로 통합한 현행 User Flow다.

@@ -19,6 +19,8 @@
 
 ## 2. 권장 문서 구조
 
+아래 트리는 과거의 구조 제안이며 실제 파일 목록이나 이동 지시가 아니다. 현행 경로는 [기존 인덱스](../00_README.md)를 따른다. 트리의 미생성 문서는 링크 대상으로 간주하지 않으며, 동등한 인덱스·결정 로그·협업 문서를 추가하지 않는다.
+
 ```text
 docs/
 ├─ product/
@@ -43,7 +45,7 @@ docs/
 └─ DECISION_LOG.md
 ```
 
-현재 문서 묶음은 위 구조로 옮기기 전의 기준 원본이다. 이동할 때 내용을 임의로 요약하거나 의미를 바꾸지 않는다.
+현재 문서 묶음을 기준 원본으로 보존한다. 별도 작업에서 이동을 요청받는 경우에도 내용을 임의로 요약하거나 의미를 바꾸지 않는다.
 
 ## 3. 에이전트 역할
 
@@ -123,7 +125,7 @@ flowchart LR
 | --- | --- |
 | Concert Taste 온보딩 | Product Spec, User Flow, relevant Screen Spec, data contract |
 | 좌석 추천 API | Recommendation System, Seat data model, API contract, test fixtures |
-| Figma Seat 화면 | IA, User Flow addendum, Design/Interaction, mockups |
+| Figma Seat 화면 | [IA](../product/IA.md), [통합 User Flow](../product/USER_FLOW.md), [Design/Interaction](../design/DESIGN_AND_INTERACTION.md), [자산 지도](../design/REFERENCE_MAP.md) |
 | 후기 CRUD | Product Spec, Review flow, schema, auth policy, acceptance tests |
 
 ## 8. Figma handoff 규칙
@@ -151,9 +153,47 @@ Figma 산출물은 editable native layers, components, variants, Auto Layout, re
 
 ## 10. 현재 주의할 충돌
 
-- 기존 IA/User Flow의 Open Question 중 일부는 이미 해결되었다. `06_DECISION_LOG_AND_OPEN_QUESTIONS.md`를 우선한다.
+- 기존 IA/User Flow의 Open Question 중 일부는 이미 해결되었다. [DECISION_LOG_AND_OPEN_QUESTIONS.md](../decisions/DECISION_LOG_AND_OPEN_QUESTIONS.md)를 우선한다.
 - 일부 목업의 `All Events`, 타인 후기, 고정 추천 유형은 최신 범위가 아니다.
 - 좌석 번호 추천은 제품 목표지만 실시간 구매 가능 좌석 추천은 아니다.
 - LP의 playing 디자인은 확정 방향이지만 실제 음원 제공자는 미확정이다.
 - 기술 스택은 제안 상태이므로 구현 시작 전에 ADR로 확정한다.
 
+우선순위 서술 차이는 [결정 로그](../decisions/DECISION_LOG_AND_OPEN_QUESTIONS.md)의 DR-001, 본문과 Open Questions의 충돌은 DR-002~DR-004를 따른다. 위의 ADR 절차와 기존 결정 로그의 관계도 DR-001에서 검토한다. 별도 결정 로그를 자동 생성하지 않는다.
+
+## 11. Codex 작업과 문서 검증
+
+실행 진입점은 [루트 AGENTS](../../AGENTS.md), 작업 입력은 [템플릿](../tasks/TEMPLATE.md)과 [P-001](../tasks/P-001.md)이다. 문서를 완성한 상태와 앱 구현을 완료한 상태를 구분한다.
+
+저장소 루트에서 Python 3.11 이상으로 실행한다. 아래 Python 의존성은 문서 검사 도구 전용이며 앱 스택 선택이 아니다.
+
+의존성 목록은 [requirements-docs.txt](../../scripts/requirements-docs.txt), 회귀 테스트는 [test_check_docs.py](../../scripts/tests/test_check_docs.py)에 있다.
+
+```sh
+python3 -m venv /tmp/resonance-docs-venv
+/tmp/resonance-docs-venv/bin/python -m pip install -r scripts/requirements-docs.txt
+/tmp/resonance-docs-venv/bin/python scripts/check_docs.py
+/tmp/resonance-docs-venv/bin/python -m unittest discover -s scripts/tests -v
+git diff --check
+```
+
+[검사기](../../scripts/check_docs.py)는 저장소의 Markdown 링크·이미지 및 HTML의 href/src를 문서 위치 기준으로 검사한다. 공백·한글·URL 인코딩과 reference-style 링크를 지원한다. 루트 절대 경로와 저장소 밖 경로는 실패한다. URL query/fragment는 파일 존재 검사에서 제거하며 제목 anchor의 유효성은 검사하지 않는다. 외부 URL은 네트워크 요청 없이 제외한다.
+
+코드 블록·인라인 코드의 예시/역사적 파일명은 검사하지 않는다. 실제로 필요한 문서·자산은 상대 링크로 작성한다. 미확보 자산은 [자산 지도](../design/REFERENCE_MAP.md)에 `누락`으로 기록하고 가짜 링크를 만들지 않는다. `.git`, 의존성·빌드·캐시 디렉터리는 검사에서 제외한다. 링크가 유효하다는 사실은 정책 정합성이나 자산 사용 권한을 보증하지 않는다.
+
+[GitHub Actions](../../.github/workflows/docs-check.yml)는 push, pull request, 수동 실행에서 같은 검사와 회귀 테스트를 실행한다. 로컬 파일만으로 성공하지 않도록 공유할 링크 대상도 변경 사항에 포함하고, 최종 보고에 명령·종료 결과·미실행 항목을 적는다.
+
+## 12. 기반 작업 검증 기록
+
+2026-09-15 문서·자동화 기반 작업. 앱 구현은 수행하지 않았다.
+
+| 검증 | 실제 결과 |
+| --- | --- |
+| 문서 검사 | Python 3.13.3에서 Markdown 14개, 로컬 참조 128개, 오류 0개 |
+| 검사기 회귀 테스트 | 12개 통과; 누락 문서·이미지 실패, 경로 복구 후 성공, 상대/한글/공백/reference-style/HTML 링크, 코드·외부 URL 제외 확인 |
+| 변경 공백 검사 | `git diff --check` 통과 |
+| Workflow 구문 | Ruby YAML 파서로 구문 검사 통과; actionlint는 설치되어 있지 않아 미실행 |
+| 원격 GitHub Actions | workflow 작성 완료; push·원격 실행은 이번 작업에서 수행하지 않음 |
+| 앱·PWA 동작 | 미실행; P-001은 기술 선택 T-01 이후 착수 |
+
+변경 범위는 기존 인덱스·IA·Flow·이 협업 문서·결정 로그의 참조 및 감사 기록과 AGENTS, 작업 템플릿/P-001, 자산 지도, PWA 범위, 문서 검사 스크립트·테스트·workflow다. 기존 분야별 기획 원문은 보존했다. 처음 관찰한 미추적 PNG 네 장은 최종 재점검에서 없었으며, 현재 자산 누락으로 기록했다. 이 작업에서는 이미지 파일을 변경하지 않았다. 남은 제품 충돌은 DR-001~004, 다음 실행은 P-001 7절을 따른다.

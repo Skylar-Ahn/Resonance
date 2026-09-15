@@ -3,7 +3,7 @@
 > 문서 상태: Working Baseline v0.3  
 > 기준일: 2026-09-15  
 > 제품: 클래식 공연 추천·좌석 추천·아티클·개인 후기 아카이빙 반응형 웹앱  
-> 대체 문서: `IA_rsn.md` Draft v0.2  
+> 대체 문서: `IA_rsn.md` Draft v0.2 (저장소에 없는 역사적 원본명)\
 > 목적: 화면, 콘텐츠, 기능 및 사용자 데이터 사이의 구조를 정의하고 User Flow, 기능 명세, 디자인 및 개발의 기준으로 사용한다.
 
 ## 1. 문서 해석 기준
@@ -17,6 +17,8 @@
 | Open Question | 아직 결정되지 않아 임의로 구현해서는 안 되는 내용 |
 
 목업에만 존재하는 요소나 이전 제안은 자동으로 확정 기능이 되지 않는다. 이 문서와 세부 문서가 충돌하면 사용자의 최신 명시적 결정과 Decision Log를 우선한다.
+
+이 우선순위와 인덱스의 차이는 [결정 로그](../decisions/DECISION_LOG_AND_OPEN_QUESTIONS.md)의 DR-001에서 검토 중이다.
 
 ## 2. 제품 정의와 범위
 
@@ -188,7 +190,7 @@ Apple Music 등 외부 음악 서비스는 선택적 입력 보조 후보일 뿐
 - 기본 상태: 노란 `resonance` 레이블
 - 재생 상태: 흑백 작곡가 또는 연주자 이미지
 
-실제 음악 재생을 MVP 기능으로 포함할지, 시각적 인터랙션으로만 사용할지는 Open Question이다. 자세한 상태 표현은 `DESIGN_AND_INTERACTION.md`에서 다룬다.
+실제 음악 재생을 MVP 기능으로 포함할지, 시각적 인터랙션으로만 사용할지는 Open Question이다. 자세한 상태 표현은 [DESIGN_AND_INTERACTION.md](../design/DESIGN_AND_INTERACTION.md)에서 다룬다.
 
 ### 6.2 햄버거 메뉴
 
@@ -317,7 +319,7 @@ Concert Taste에 맞는 공연을 발견하고, 추천 좌석과 이유를 빠�
 - 추천 좌석이 현재 구매 가능하다고 보장하지 않는다.
 - 이 경계를 추천 결과와 예매 CTA 가까이에 명시해야 한다.
 
-추천 근거와 신뢰도를 어느 수준까지 노출할지는 Open Question이다. 세부 추천 입력과 후기 기반 피드백 구조는 `RECOMMENDATION_SYSTEM.md`에서 정의한다.
+추천 근거와 신뢰도를 어느 수준까지 노출할지는 Open Question이다. 세부 추천 입력과 후기 기반 피드백 구조는 [RECOMMENDATION_SYSTEM.md](../recommendation/RECOMMENDATION_SYSTEM.md)에서 정의한다.
 
 #### Program
 
@@ -568,7 +570,7 @@ flowchart TD
 
 1. 인증 방식과 계정 복구 정책은 무엇인가?
 2. Splash 이후 비인증·인증 상태별 정확한 도착 화면은 어디인가?
-3. 기존 사용자의 재로그인 시 항상 App Home으로 이동하는가, 마지막 화면을 복원하는가?
+3. 기존 사용자의 재로그인 시 항상 App Home으로 이동하는가, 마지막 화면을 복원하는가? D-003·본문과의 관계는 [결정 로그](../decisions/DECISION_LOG_AND_OPEN_QUESTIONS.md)의 DR-002 참조.
 4. Content Preferences의 정확한 카테고리와 검색·직접 추가 방식은 무엇인가?
 5. Experience Preference의 AI 해석 결과를 사용자가 반드시 확인·수정하는가?
 6. Apple Music 연결을 MVP 온보딩 보조로 포함하는가?
@@ -631,12 +633,12 @@ flowchart TD
 
 | 문서 | 다루는 내용 |
 | --- | --- |
-| `USER_FLOW.md` | 목표별 시작점, 행동 순서, 분기, 완료 조건 |
-| `PRODUCT_SPEC.md` | 기능 정책, 입력, 검증, 권한, 수용 기준 |
-| `RECOMMENDATION_SYSTEM.md` | 공연·좌석 추천 입력, 랭킹, 후기 근거, 피드백 루프 |
-| `DATA_AND_ARCHITECTURE.md` | 데이터 수집·정규화, 엔티티, 저장 구조, 기술 아키텍처 |
-| `DESIGN_AND_INTERACTION.md` | 시각 언어, 컴포넌트, 반응형 표현, 상태와 상호작용 |
-| `DECISION_LOG_AND_OPEN_QUESTIONS.md` | 결정 이력, 선택 이유, 해결·보류 상태 |
+| [USER_FLOW.md](USER_FLOW.md) | 목표별 시작점, 행동 순서, 분기, 완료 조건 |
+| [PRODUCT_SPEC.md](PRODUCT_SPEC.md) | 기능 정책, 입력, 검증, 권한, 수용 기준 |
+| [RECOMMENDATION_SYSTEM.md](../recommendation/RECOMMENDATION_SYSTEM.md) | 공연·좌석 추천 입력, 랭킹, 후기 근거, 피드백 루프 |
+| [DATA_AND_ARCHITECTURE.md](../data/DATA_AND_ARCHITECTURE.md) | 데이터 수집·정규화, 엔티티, 저장 구조, 기술 아키텍처 |
+| [DESIGN_AND_INTERACTION.md](../design/DESIGN_AND_INTERACTION.md) | 시각 언어, 컴포넌트, 반응형 표현, 상태와 상호작용 |
+| [DECISION_LOG_AND_OPEN_QUESTIONS.md](../decisions/DECISION_LOG_AND_OPEN_QUESTIONS.md) | 결정 이력, 선택 이유, 해결·보류 상태 |
 
 IA는 화면과 콘텐츠의 존재·계층·연결을 정의한다. 추천 가중치, API, DB 필드, 수집 방법, 오류 문구와 같은 구현 세부는 해당 후속 문서에서 다룬다.
 
