@@ -16,10 +16,18 @@
 4. 결정되지 않은 사항을 임의로 확정하지 않는다.
 5. 관련 문서와 후속 반영 대상을 식별한다.
 6. 필요할 때만 표, Mermaid 다이어그램 또는 이미지를 사용한다.
-7. `TEMPLATE.md` 형식으로 Markdown 파일을 작성해 이 디렉터리에 저장한다.
+7. `TEMPLATE.md` 형식으로 Markdown 파일을 작성해 `minutes/` 디렉터리에 저장한다.
 8. GitHub 저장소 `Skylar-Ahn/Resonance`의 기본 브랜치에 반영한다.
 
-## 파일명 규칙
+## 저장 위치와 파일명 규칙
+
+저장 위치:
+
+```text
+docs/meetings/minutes/
+```
+
+파일명:
 
 ```text
 YYYY-MM-DD-회의주제.md
@@ -51,4 +59,4 @@ YYYY-MM-DD-회의주제.md
 
 ## 템플릿
 
-새 회의록은 [TEMPLATE.md](TEMPLATE.md)를 기준으로 작성한다.
+새 회의록은 [TEMPLATE.md](TEMPLATE.md)를 기준으로 작성하고 [`minutes/`](minutes/)에 저장한다.
