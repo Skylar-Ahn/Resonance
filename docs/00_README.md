@@ -46,7 +46,7 @@
 | [RESPONSIVE.md](design/RESPONSIVE.md) | breakpoint, 기기별 navigation 위치, reflow와 상태 보존 |
 | [INTERACTION.md](design/INTERACTION.md) | 제스처·전환, detail Back, LP playback 상태와 접근성 interaction |
 | [DECISION_LOG_AND_OPEN_QUESTIONS.md](decisions/DECISION_LOG_AND_OPEN_QUESTIONS.md) | 기존 미확정 항목의 해결 상태와 현재 남은 질문 |
-| [WORKFLOW_AND_AGENT_HANDOFF.md](process/WORKFLOW_AND_AGENT_HANDOFF.md) | 협업·변경 제안·문서 갱신과 Git 커밋·추적 정책 |
+| [WORKFLOW_AND_AGENT_HANDOFF.md](process/WORKFLOW_AND_AGENT_HANDOFF.md) | 협업·변경 제안·문서 갱신과 Git 커밋·추적 정책 |\n| [Meetings](meetings/README.md) / [Meeting Template](meetings/TEMPLATE.md) | ChatGPT 논의 과정, 판단 근거, 결정·잠정안·Open Question을 보존하는 회의록 운영 규칙과 템플릿 |
 | [AGENTS.md](../AGENTS.md) | Codex 작업 진입 지침 |
 | [작업 템플릿](tasks/TEMPLATE.md) / [P-001](tasks/P-001.md) | 반복 실행 입력과 첫 프로토타입 범위 |
 | [REFERENCE_MAP.md](design/REFERENCE_MAP.md) | 화면별 기준 자산과 누락 |
