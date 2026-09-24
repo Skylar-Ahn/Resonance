@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="420" viewBox="0 0 640 420" fill="none">
+  <title>Yellow Paper Boat - Side View</title>
+  <desc>A recognizable yellow origami paper boat in side view with a soft 3D animation-style finish.</desc>
+
+  <defs>
+    <linearGradient id="paperTop" x1="250" y1="95" x2="350" y2="265" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFF2C9"/>
+      <stop offset="0.55" stop-color="#E7C78E"/>
+      <stop offset="1" stop-color="#D9B77A"/>
+    </linearGradient>
+
+    <linearGradient id="paperLeft" x1="150" y1="170" x2="290" y2="300" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F3DBA0"/>
+      <stop offset="1" stop-color="#C99E58"/>
+    </linearGradient>
+
+    <linearGradient id="hullFront" x1="115" y1="250" x2="500" y2="360" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F8E5B1"/>
+      <stop offset="0.48" stop-color="#E7C78E"/>
+      <stop offset="1" stop-color="#D2A85F"/>
+    </linearGradient>
+
+    <linearGradient id="hullBottom" x1="200" y1="322" x2="395" y2="390" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#C9984F"/>
+      <stop offset="1" stop-color="#AD7E35"/>
+    </linearGradient>
+
+    <linearGradient id="bowFace" x1="454" y1="250" x2="548" y2="325" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#E4BE78"/>
+      <stop offset="1" stop-color="#B8873B"/>
+    </linearGradient>
+
+    <filter id="shadow" x="55" y="65" width="540" height="345" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="13" stdDeviation="12" flood-color="#000" flood-opacity="0.18"/>
+    </filter>
+
+    <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="5"/>
+    </filter>
+  </defs>
+
+  <!-- soft grounding shadow -->
+  <ellipse cx="320" cy="362" rx="205" ry="24" fill="#000" opacity="0.08" filter="url(#softGlow)"/>
+
+  <g filter="url(#shadow)">
+    <!-- rear folded triangle -->
+    <path d="M178 257L252 130L316 260L178 257Z"
+          fill="url(#paperLeft)"/>
+
+    <!-- main folded triangle -->
+    <path d="M252 130L413 260H316L252 130Z"
+          fill="url(#paperTop)"/>
+
+    <!-- center fold plane -->
+    <path d="M252 130L316 260L278 260L232 189L252 130Z"
+          fill="#D7AE69" opacity="0.95"/>
+
+    <!-- upper lip of the boat -->
+    <path d="M111 260L517 260L463 310L160 310L111 260Z"
+          fill="url(#hullFront)"/>
+
+    <!-- lower hull -->
+    <path d="M160 310L463 310L401 366H224L160 310Z"
+          fill="url(#hullBottom)"/>
+
+    <!-- bow face, gives side-view 3D volume -->
+    <path d="M517 260L555 286L463 310L517 260Z"
+          fill="url(#bowFace)"/>
+
+    <!-- tiny stern plane -->
+    <path d="M111 260L88 285L160 310L111 260Z"
+          fill="#EBCF91"/>
+
+    <!-- origami creases -->
+    <path d="M252 130L316 260"
+          stroke="#B48742" stroke-width="4.5" stroke-linecap="round" opacity="0.5"/>
+
+    <path d="M178 257L316 260L413 260"
+          stroke="#B48742" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity="0.35"/>
+
+    <path d="M111 260H517"
+          stroke="#B48742" stroke-width="4" stroke-linecap="round" opacity="0.32"/>
+
+    <path d="M160 310L311 338L463 310"
+          stroke="#F8E7BB" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity="0.38"/>
+
+    <!-- animation-style highlights -->
+    <path d="M269 161C292 183 318 212 345 238"
+          stroke="#FFF8E7" stroke-width="7" stroke-linecap="round" opacity="0.30"/>
+
+    <path d="M171 281C214 273 270 274 325 278"
+          stroke="#FFF9EA" stroke-width="7" stroke-linecap="round" opacity="0.28"/>
+
+    <path d="M136 272L475 272"
+          stroke="#FFF4D7" stroke-width="3" stroke-linecap="round" opacity="0.25"/>
+
+    <!-- subtle rim line -->
+    <path d="M88 285L160 310L224 366H401L463 310L555 286"
+          stroke="#8F6429" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.25"/>
+  </g>
+</svg>
